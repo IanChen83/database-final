@@ -13,8 +13,6 @@ This is the repository for final project of database 2016 fall.
 > * `build` The output files
 >
 > * `report`The report document and its assets
->
->   ​
 
 ## Usage
 
@@ -25,6 +23,8 @@ Make sure you have `cmake` installed, change to `/build` and type in `cmake ..` 
 Build files by typing in `make`.
 
 Run tests by typing in `make test`. Alternatively, you can find each test executable in `/build/test/${test name}` folders.
+
+**NOTICE** If you change the CMakeLists.txt, make sure to remove the entire `/build` folder and run `cmake ..` again.
 
 #### Development
 
