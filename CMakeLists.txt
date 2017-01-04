@@ -14,6 +14,8 @@ add_compile_options(-g)
 # so that git can track file change correctly.
 set(SOURCE
     src/bpt.cpp
+    src/action.cpp
+    src/util.cpp
 )
 
 add_library(database-final ${SOURCE})
