@@ -1,5 +1,7 @@
 #include <cstring>
 #include <vector>
+#include <typeinfo>
+#include <iostream>
 #include "gtest/gtest.h"
 #include "action.h"
 
@@ -10,20 +12,17 @@ TEST(ActionSpecTest, ValueSpec) {
     Value value;
     EXPECT_EQ(value.type, ValueType::Undefined);
     EXPECT_EQ(value.IntValue, 0);
-    EXPECT_TRUE(value.n == NULL);
 
-    Value ivalue(9, &value);
+    Value ivalue(9);
     EXPECT_EQ(ivalue.type, ValueType::Integer);
     EXPECT_EQ(ivalue.IntValue, 9);
-    EXPECT_EQ(ivalue.n, &value);
 
     char* str = new char[12];
     strcpy(str, "StringValue");
 
-    Value svalue(str, &value);
+    Value svalue(str);
     EXPECT_EQ(svalue.type, ValueType::String);
     EXPECT_STREQ(svalue.StrValue, "StringValue");
-    EXPECT_EQ(svalue.n, &value);
     delete[] str;
 }
 
@@ -44,17 +43,18 @@ TEST(ActionSpecTest, PayloadSpecs) {
 
     // Test default values
     EXPECT_STREQ(ipayload.name, "IPayload");
-    EXPECT_TRUE(ipayload.values == NULL);
 
     DPayload dpayload = {
-        .name = "DPayload"
+        .name = "DPayload",
+        .value = new Value()
     };
 
     // Test default values
     EXPECT_STREQ(dpayload.name, "DPayload");
-    EXPECT_EQ(dpayload.value.type, ValueType::Undefined);
-    EXPECT_EQ(dpayload.value.IntValue, 0);
-    EXPECT_TRUE(dpayload.value.n == NULL);
+    EXPECT_EQ(dpayload.value->type, ValueType::Undefined);
+    EXPECT_EQ(dpayload.value->IntValue, 0);
+
+    delete dpayload.value;
 }
 
 TEST(ActionSpecTest, ActionSpec) {
