@@ -55,3 +55,40 @@ tokenize(const std::string& s, char c, bool trim_space) {
     }
     return v;
 }
+
+// Use a state machine to split texts
+std::vector<std::string>
+tokenizeEscape(const std::string& s, char c, bool trim_space) {
+    bool inQuote = false;
+    auto it = s.cbegin(), start = it;
+    auto end = s.cend();
+
+    std::vector<std::string> v;
+
+    while(it != end) {
+        if(*it == '"') {
+            inQuote = !inQuote;
+            ++it;
+            continue;
+        }
+
+        if(*it == c && !inQuote) {
+            if(start != it) {
+                v.emplace_back(start, it);
+            }
+            start = ++it;
+        } else {
+            ++it;
+        }
+    }
+
+    if(start != end) {
+        v.emplace_back(start, end);
+    }
+
+    if(trim_space) {
+        for(auto& x: v)
+            trim(x);
+    }
+    return v;
+}

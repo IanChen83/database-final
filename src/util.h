@@ -8,5 +8,6 @@ static inline void ltrim(std::string& s);
 static inline void rtrim(std::string& s);
 static inline void trim(std::string& s);
 std::vector<std::string> tokenize(const std::string&, char, bool = false);
+std::vector<std::string> tokenizeEscape(const std::string&, char, bool = false);
 
 #endif

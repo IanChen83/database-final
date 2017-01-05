@@ -30,6 +30,12 @@ isValidRecord(const char* input) {
       )
         return false;
 
+    for(const char* i = input + strlen(input) - 2; i > input ; --i) {
+        if(*i == '"') {
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -37,17 +43,21 @@ bool
 isValidValue(const char* input) {
     if(input == NULL)
         return false;
-
     const string r(input);
-    if(r[0] == '"') {
-        return r[r.size() - 1] == '"';
+    if(input[0] == '"' && input[strlen(input) - 1] == '"') {
+        for(const char* i = input + strlen(input) - 2; i > input ; --i) {
+            if(*i == '"') {
+                return false;
+            }
+        }
+        return true;
     } else {
         try{
             if(std::stoi(r) || std::stoi(r) == 0)
                 return true;
         } catch(const exception& e) {
-            return false;
         }
+        return false;
     }
 }
 
@@ -86,7 +96,7 @@ isValidIInput(const char* input) {
     if(input == NULL || input[0] != 'I')
         return false;
 
-    auto records = tokenize(input, ';', true);
+    auto records = tokenizeEscape(input, ';', true);
     auto tokens = tokenize(records[0], ',', true);
 
     if(
@@ -100,8 +110,8 @@ isValidIInput(const char* input) {
 
     records[0] = tokens[2] + "," + tokens[3];
 
-    for(int i = 1; i < records.size(); ++i) {
-        auto x = tokenize(records[i], ',', true);
+    for(auto& record: records) {
+        auto x = tokenize(record, ',', true);
 
         if(x.size() != 2 || x[0] == "" || x[1] == "") {
             return false;
@@ -158,7 +168,7 @@ getRPayload(const char* input) {
 
 IPayload
 getIPayload(const char* input) {
-    auto records = tokenize(input, ';', true);
+    auto records = tokenizeEscape(input, ';', true);
     auto tokens = tokenize(records[0], ',', true);
     records[0] = tokens[2] + "," + tokens[3];
 

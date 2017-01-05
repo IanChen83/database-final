@@ -66,6 +66,7 @@ TEST(ActionUsageTest, ValidRInput) {
 TEST(ActionUsageTest, InvalidIInput) {
     EXPECT_FALSE(isValidInput("I, Student,, \"80\""));
     EXPECT_FALSE(isValidInput("I, Student;"));
+    EXPECT_FALSE(isValidInput("I, Student, \"string\", \"asd\"f\""));
     EXPECT_FALSE(isValidInput("I, Student, \"string\", \"asdf\"; 39"));
     EXPECT_FALSE(isValidInput("I, Student, \"string\", \"asdf\"; 39, "));
 }
@@ -73,6 +74,8 @@ TEST(ActionUsageTest, InvalidIInput) {
 TEST(ActionUsageTest, ValidIInput) {
     EXPECT_TRUE(isValidIInput("I, Student, \"index1\", \"record1\""));
     EXPECT_TRUE(isValidIInput("I, Student, \"index1\", \"record1\"; \"index2\", \"record2\""));
+    EXPECT_TRUE(isValidIInput("I, Student, \"index1\", \"record1;\"; \"index2\", \"record2\""));
+    EXPECT_TRUE(isValidIInput("I, Student, \"index1\", \"record1\"; \"index2\", \"record2;\""));
 }
 
 TEST(ActionUsageTest, InvalidDInput) {
