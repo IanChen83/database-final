@@ -1,5 +1,6 @@
 #include "action.h"
 #include "util.h"
+#include <algorithm>
 #include <string>
 #include <cstring>
 #include <iostream>
@@ -7,17 +8,42 @@
 using namespace std;
 
 Value*
-createValue(int v) {
-    return new Value(v);
+createValue(int v, size_t size) {
+    size = max(sizeof(Value), size);
+    char* r = new char[size];
+    ((Value*)r)->type = ValueType::Integer;
+    ((Value*)r)->IntValue = v;
+    return (Value*)r;
 }
 
 Value*
-createValue(const char* v) {
-    char* r = new char[sizeof(Value) + strlen(v)];
+createValue(const char* v, size_t size) {
+    size = max(sizeof(Value) + strlen(v), size);
+    char* r = new char[size];
     ((Value*)r)->type = ValueType::String;
     ((Value*)r)->StrValue = (char*)((Value*)r + 1);
     strcpy((char*)((Value*)r + 1), v);
     return (Value*)r;
+}
+
+static inline void
+removeValue(Value* v) {
+    delete[] (char*)v;
+}
+
+Record*
+createRecord(int v, const char* d) {
+    return NULL;
+}
+
+Record*
+createRecord(const char* v, const char* d) {
+    return NULL;
+}
+
+static inline void
+removeRecord(Record* v) {
+    delete[] v;
 }
 
 bool
@@ -172,7 +198,7 @@ getIPayload(const char* input) {
     auto tokens = tokenize(records[0], ',', true);
     records[0] = tokens[2] + "," + tokens[3];
 
-    vector<KeyValuePair> values;
+    vector<Record> values;
 
     for(auto& x: records) {
         auto token = tokenize(x.c_str(), ',', true);

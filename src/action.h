@@ -17,13 +17,18 @@
  * D: Delete a record by its key
  *      D, Relation-name, key-value
  *
- * U: Unknown action type Implementation defined
+ * U: Unknown action type, implementation defined
  * */
 enum ActionType { U, R, I, D };
 
 
 /*
+ * There are two types of Value: Integer and String
+ *
  * An Value is defined by ValueType/ValueData pair
+ *
+ * Although it is called 'Value', this struct is used to
+ * store key of each record
  *
  * */
 enum ValueType { Undefined, Integer, String };
@@ -44,12 +49,34 @@ struct Value {
  * To minimize copy/move cost, key should be created in heap and
  * access via pointer.
  *
+ * These functions return a Value in heap, and the data (IntValue
+ * or StrValue) are also stored in heap.
+ *
+ * Call removeValue if the Value is to be removed (or memory leak
+ * will occur).
+ *
+ * function signature:
+ * Value* createValue(data, min_size)
+ *
  * */
-Value* createValue(int);
-Value* createValue(const char*);
+Value* createValue(int, size_t = 0);
+Value* createValue(const char*, size_t = 0);
 
-typedef std::pair<Value*, const char*> KeyValuePair;
+static inline void removeValue(Value*);
 
+/*
+ * A Record is a key(of type 'Value')/value(of type 'const char*')
+ *
+ * call createRecord(key, value) to create a new record in heap
+ * call removeRecord(Record*) to remove a record
+ *
+ * */
+typedef std::pair<Value*, const char*> Record;
+
+Record* createRecord(int, const char*);
+Record* createRecord(const char*, const char*);
+
+static inline void removeRecord(Record*);
 /*
  * An input data set has many lines, while each line has one of the three kinds of action:
  * R, I, or D.
@@ -66,7 +93,7 @@ struct RPayload {
 
 struct IPayload {
     const char* name;               // Relation name
-    std::vector<KeyValuePair> values;     // Values are of Key/Record pairs
+    std::vector<Record> values;     // Values are of Key/Record pairs
 };
 
 struct DPayload {

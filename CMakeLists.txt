@@ -16,6 +16,7 @@ set(SOURCE
     src/bpt.cpp
     src/action.cpp
     src/util.cpp
+    src/page.cpp
 )
 
 add_library(database-final ${SOURCE})

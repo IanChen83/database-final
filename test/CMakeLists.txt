@@ -38,4 +38,5 @@ include_directories("${source_dir}/googletest/include"
 
 # add_subdirectory(testbpt)
 add_subdirectory(testspec)
+add_subdirectory(testpage)
 
