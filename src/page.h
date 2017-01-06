@@ -3,9 +3,13 @@
 
 #include <cstdint>
 
-#define PAGE_SIZE 512
-
+/*
+ * Page structure only affects how these functions are implemented.
+ */
+////// Page Structure ////////
 typedef char Page;
+
+#define PAGE_SIZE 512
 
 #define records_in_page(page) (*(uint16_t*)((char*)(page)+PAGE_SIZE-6))
 
@@ -14,6 +18,8 @@ void set_free_space_pointer(Page*, char*);
 
 #define record_offset(page, sn) (*(int16_t*)((char*)(page)+PAGE_SIZE-(sn)*4-10))
 #define record_len(page, sn) (*(uint16_t*)((char*)(page)+PAGE_SIZE-(sn)*4-8))
+
+/////// Page Structure //////
 
 Page* create_page();
 void delete_page(Page*);
