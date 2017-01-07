@@ -21,21 +21,21 @@ delete_page(Page* page) {
     delete[] page;
 }
 
-unsigned int
+int16_t
 add_record(Page* page, const char* record, unsigned int len) {
     auto p = free_space_pointer(page);
     auto records_num = records_in_page(page);
 
     if(p + len + 6 + 4 * records_num > page + PAGE_SIZE) {
-        return 0;
+        return 1;
     }
 
     memcpy(p, record, len);
     record_offset(page, records_num) = p - page;
     record_len(page, records_num) = (uint32_t)len;
-    unsigned int ret = ++records_in_page(page);
+    ++records_in_page(page);
     set_free_space_pointer(page, free_space_pointer(page) + len);
-    return ret;
+    return records_num;
 }
 
 void

@@ -17,16 +17,16 @@ TEST(PageTest, AddRecord) {
     const char* a = "asdf";
     auto r = add_record(page, a, 5);
 
-    ASSERT_EQ(r, 1);
+    ASSERT_EQ(r, 0);
     EXPECT_EQ(records_in_page(page), 1);
-    EXPECT_EQ(record_offset(page, r - 1), 0);
-    EXPECT_EQ(record_len(page, r - 1), 5);
+    EXPECT_EQ(record_offset(page, r), 0);
+    EXPECT_EQ(record_len(page, r), 5);
 
     auto r2 = add_record(page, a, 5);
-    ASSERT_EQ(r2, 2);
+    ASSERT_EQ(r2, 1);
     EXPECT_EQ(records_in_page(page), 2);
-    EXPECT_EQ(record_offset(page, r2 - 1), 5);
-    EXPECT_EQ(record_len(page, r2 - 1), 5);
+    EXPECT_EQ(record_offset(page, r2), 5);
+    EXPECT_EQ(record_len(page, r2), 5);
 
     delete_page(page);
 }
