@@ -22,17 +22,18 @@ delete_page(Page* page) {
 }
 
 int16_t
-add_record(Page* page, const char* record, unsigned int len) {
+add_record(Page* page, const void* record, unsigned int len) {
     auto p = free_space_pointer(page);
     auto records_num = records_in_page(page);
 
     if(p + len + 6 + 4 * records_num > page + PAGE_SIZE) {
-        return 1;
+        return squeeze_record(page, record, len);
     }
 
     memcpy(p, record, len);
-    record_offset(page, records_num) = p - page;
-    record_len(page, records_num) = (uint32_t)len;
+    Slot* s = record_slot(page, records_num);
+    s->offset = p - page;
+    s->length = (uint32_t)len;
     ++records_in_page(page);
     set_free_space_pointer(page, free_space_pointer(page) + len);
     return records_num;
@@ -40,8 +41,32 @@ add_record(Page* page, const char* record, unsigned int len) {
 
 void
 remove_record(Page* page, unsigned int num) {
-    record_offset(page, num) = -1;
-    record_len(page, num) = 0;
+    record_offset(page, num) = -record_offset(page, num) - 1;
+}
+
+int16_t
+squeeze_record(Page* page, const void* record, unsigned int len) {
+    auto total_records = records_in_page(page);
+    auto it = total_records - 1;
+
+    while(it >= 0) {
+        auto slot = record_slot(page, it);
+        if(slot->offset >= 0 || slot->length < len) {
+            --it;
+            continue;
+        }
+
+        // offset is currently negative
+        char* p = page - record_offset(page, it) - 1;
+
+        memcpy(p, record, len);
+        slot->offset = p - page;
+        slot->length = (uint32_t)len;
+
+        return it;
+    }
+
+    return -1;
 }
 
 char*
