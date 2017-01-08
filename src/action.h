@@ -43,6 +43,9 @@ struct Value {
         char* StrValue;
     };
 };
+bool operator< (const Value&, const Value&);
+
+
 
 /*
  * Because key(index) will be potentially be stored centralized.

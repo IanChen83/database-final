@@ -7,6 +7,16 @@
 
 using namespace std;
 
+bool
+operator<(const Value &l, const Value &r) {
+    if (l.type == ValueType::Integer) {
+        return l.IntValue < r.IntValue; 
+    } else if (l.type == ValueType::String) {
+        return strcmp(l.StrValue, r.StrValue) < 0;
+    }
+}
+
+
 Value*
 createValue(int v, size_t size) {
     size = max(sizeof(Value), size);
