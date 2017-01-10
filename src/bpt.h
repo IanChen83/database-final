@@ -11,7 +11,8 @@
 #define MAX_ENTRIES      64
 #define MAX_LEVEL        10
 /* the encapulated B+ tree */
-int init_test();
+
+typedef int32_t rid_t;
 
 typedef struct {
     size_t order; /* `order` of B+ tree */
@@ -44,16 +45,19 @@ struct bplus_leaf {
         struct bplus_non_leaf *parent;
         struct bplus_leaf *next;
         int entries;
-        Record record[MAX_ENTRIES];
+        Value key[MAX_ENTRIES];
+        rid_t data[MAX_ENTRIES];
 };
 
 class bplus_tree {
 public:
+    bplus_tree(int, int, int);
+    ~bplus_tree();
     void bplus_tree_dump();
-    int bplus_tree_get(Value key);
-    int bplus_tree_put(Value key, char* data);
-    int bplus_tree_get_range(Value key1, Value key2);
-    struct bplus_tree *bplus_tree_init(int level, int order, int entries);
+    rid_t bplus_tree_get(Value);
+    bool bplus_tree_insert(Value, char*);
+    bool bplus_tree_delete(Value);
+    rid_t bplus_tree_get_range(Value, Value);
     void bplus_tree_deinit();
 
 
@@ -62,11 +66,21 @@ private:
 #else
 public:
 #endif
+    //// private method
+    rid_t bplus_tree_search(Value key);
+    bool leaf_insert(bplus_leaf *leaf, Value key, char* data);
+    bool non_leaf_insert(bplus_non_leaf *node, bplus_node *sub_node, Value key, int level);
+    void non_leaf_remove(bplus_non_leaf *node, int remove, int level);
+    bool leaf_remove(bplus_leaf *leaf, Value key);
+
+    ////
+    //// data member
     meta_t meta;
     int order;
     int entries;
     int level;
+    int value_size;
     struct bplus_node *root;
-    struct bplus_node *head[MAX_LEVEL];
+    struct bplus_node *head;
 };
 #endif

@@ -43,7 +43,8 @@ struct Value {
         char* StrValue;
     };
 };
-bool operator< (const Value&, const Value&);
+bool operator> (const Value&, const Value&);
+bool operator!= (const Value&, const Value&);
 
 
 
