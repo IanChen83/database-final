@@ -26,24 +26,23 @@ typedef struct {
     off_t leaf_offset; /* where is the first leaf */
 } meta_t;
 
-struct bplus_node {
+class bplus_node {
+    public:
         int type;
-        struct bplus_non_leaf *parent;
+        bplus_node *parent;
 };
 
-struct bplus_non_leaf {
-        int type;
-        struct bplus_non_leaf *parent;
-        struct bplus_non_leaf *next;
+class bplus_non_leaf: public bplus_node {
+    public:
+        bplus_non_leaf *next;
         int children;
         Value key[MAX_ORDER - 1];
-        struct bplus_node *sub_ptr[MAX_ORDER];
+        bplus_node *sub_ptr[MAX_ORDER];
 };
 
-struct bplus_leaf {
-        int type;
-        struct bplus_non_leaf *parent;
-        struct bplus_leaf *next;
+class bplus_leaf: public bplus_node {
+    public:
+        bplus_leaf *next;
         int entries;
         Value key[MAX_ENTRIES];
         rid_t data[MAX_ENTRIES];
@@ -68,7 +67,7 @@ public:
 #endif
     //// private method
     rid_t bplus_tree_search(Value key);
-    bool leaf_insert(bplus_leaf *leaf, Value key, char* data);
+    bool leaf_insert(bplus_leaf *leaf, Value key, rid_t data);
     bool non_leaf_insert(bplus_non_leaf *node, bplus_node *sub_node, Value key, int level);
     void non_leaf_remove(bplus_non_leaf *node, int remove, int level);
     bool leaf_remove(bplus_leaf *leaf, Value key);
@@ -80,7 +79,7 @@ public:
     int entries;
     int level;
     int value_size;
-    struct bplus_node *root;
-    struct bplus_node *head;
+    bplus_node *root;
+    bplus_node *head[];
 };
 #endif
