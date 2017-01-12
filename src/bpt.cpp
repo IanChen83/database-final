@@ -317,7 +317,7 @@ bplus_tree::leaf_insert(bplus_leaf *leaf, Value key, rid_t data)
 
 
 bool
-bplus_tree::bplus_tree_insert(Value key, char* data)
+bplus_tree::bplus_tree_insert(Value key, rid_t data)
 {
     int i;
     bplus_node *node = root;
@@ -338,8 +338,7 @@ bplus_tree::bplus_tree_insert(Value key, char* data)
             break;
         case BPLUS_TREE_LEAF:
             ln = (bplus_leaf *)node;
-            // transfer data from char* to rid
-            return leaf_insert(ln, key, 0);
+            return leaf_insert(ln, key, data);
         default:
             return false;
         }

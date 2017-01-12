@@ -54,7 +54,7 @@ public:
     ~bplus_tree();
     void bplus_tree_dump();
     rid_t bplus_tree_get(Value);
-    bool bplus_tree_insert(Value, char*);
+    bool bplus_tree_insert(Value, rid_t);
     bool bplus_tree_delete(Value);
     rid_t bplus_tree_get_range(Value, Value);
     void bplus_tree_deinit();
