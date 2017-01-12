@@ -301,8 +301,8 @@ bplus_tree::leaf_insert(bplus_leaf *leaf, Value key, rid_t data)
                         parent->sub_ptr[1] = (bplus_node *)sibling;
                         parent->children = 2;
                         /* update root */
-                        root = (struct bplus_node *)parent;
-                        head[1] = (struct bplus_node *)parent;
+                        root = parent;
+                        head[1] = parent;
                         leaf->parent = parent;
                         sibling->parent = parent;
                 } else {
@@ -322,7 +322,7 @@ bplus_tree::bplus_tree_insert(Value key, rid_t data)
     int i;
     bplus_node *node = root;
     bplus_non_leaf *nln;
-    bplus_leaf *ln, *root;
+    bplus_leaf *ln;
 
     while (node != NULL) {
         switch (node->type) {
@@ -346,9 +346,9 @@ bplus_tree::bplus_tree_insert(Value key, rid_t data)
 
     /* new root */
     root = leaf_new();
-    root->key[0] = key;
-    // root->data[0] = data;
-    root->entries = 1;
+    ((bplus_leaf*)root)->key[0] = key;
+    ((bplus_leaf*)root)->data[0] = data;
+    ((bplus_leaf*)root)->entries = 1;
     head[0] = root;
     return true;
 }

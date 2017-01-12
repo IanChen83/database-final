@@ -55,6 +55,7 @@ public:
     void bplus_tree_dump();
     rid_t bplus_tree_get(Value);
     bool bplus_tree_insert(Value, rid_t);
+    rid_t bplus_tree_search(Value key);
     bool bplus_tree_delete(Value);
     rid_t bplus_tree_get_range(Value, Value);
     void bplus_tree_deinit();
@@ -66,7 +67,6 @@ private:
 public:
 #endif
     //// private method
-    rid_t bplus_tree_search(Value key);
     bool leaf_insert(bplus_leaf *leaf, Value key, rid_t data);
     bool non_leaf_insert(bplus_non_leaf *node, bplus_node *sub_node, Value key, int level);
     void non_leaf_remove(bplus_non_leaf *node, int remove, int level);
@@ -74,7 +74,6 @@ public:
 
     ////
     //// data member
-    meta_t meta;
     int order;
     int entries;
     int level;
