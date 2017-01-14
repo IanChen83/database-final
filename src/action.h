@@ -45,6 +45,7 @@ struct Value {
 };
 bool operator> (const Value&, const Value&);
 bool operator!= (const Value&, const Value&);
+bool operator== (const Value&, const Value&);
 
 
 

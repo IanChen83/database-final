@@ -20,7 +20,7 @@ TEST(Bpt, int_tree_insert) {
     bplus_leaf *root = (bplus_leaf *)tree->root;
     EXPECT_EQ(tree->root, tree->head[0]);
     EXPECT_EQ(root->data[0], 1);
-
+    EXPECT_FALSE(tree->bplus_tree_insert(a, 1));
 }
 
 TEST(Bpt, int_tree_search) {
