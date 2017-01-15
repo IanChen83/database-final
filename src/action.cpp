@@ -1,6 +1,7 @@
 #include "action.h"
 #include "util.h"
 #include <algorithm>
+#include <assert.h>
 #include <string>
 #include <cstring>
 #include <iostream>
@@ -8,14 +9,37 @@
 using namespace std;
 
 bool
-operator<(const Value &l, const Value &r) {
+operator>(const Value &l, const Value &r) {
     if (l.type == ValueType::Integer) {
-        return l.IntValue < r.IntValue;
+        return l.IntValue > r.IntValue; 
     } else if (l.type == ValueType::String) {
-        return strcmp(l.StrValue, r.StrValue) < 0;
+        return strcmp(l.StrValue, r.StrValue) > 0;
+    } else {
+        assert(0);
     }
 }
 
+bool
+operator!=(const Value &l, const Value &r) {
+    if (l.type == ValueType::Integer) {
+        return l.IntValue != r.IntValue; 
+    } else if (l.type == ValueType::String) {
+        return strcmp(l.StrValue, r.StrValue) != 0;
+    } else {
+        assert(0);
+    }
+}
+
+bool
+operator==(const Value &l, const Value &r) {
+    if (l.type == ValueType::Integer) {
+        return l.IntValue == r.IntValue; 
+    } else if (l.type == ValueType::String) {
+        return strcmp(l.StrValue, r.StrValue) == 0;
+    } else {
+        assert(0);
+    }
+}
 
 Value*
 createValue(int v, size_t size) {
