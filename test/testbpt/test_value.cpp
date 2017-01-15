@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "action.h"
+#include "value.h"
 #include <iostream>
 
 TEST(Value, IntOperator) {
@@ -9,6 +9,8 @@ TEST(Value, IntOperator) {
     ASSERT_TRUE(a != NULL);
     EXPECT_TRUE(*a > *b);
     EXPECT_FALSE(*b > *a);
+    EXPECT_FALSE(*a < *b);
+    EXPECT_TRUE(*b < *a);
     EXPECT_TRUE(*a != *b);
     EXPECT_FALSE(*b != *c);
 }
@@ -20,6 +22,8 @@ TEST(Value, StrOperator) {
     ASSERT_TRUE(a != NULL);
     EXPECT_TRUE(*a > *b);
     EXPECT_FALSE(*b > *a);
+    EXPECT_FALSE(*a < *b);
+    EXPECT_TRUE(*b < *a);
     EXPECT_TRUE(*a != *b);
     EXPECT_FALSE(*c != *b);    
 }

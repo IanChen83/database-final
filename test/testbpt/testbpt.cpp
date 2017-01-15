@@ -23,6 +23,17 @@ TEST(Bpt, int_tree_insert) {
     EXPECT_FALSE(tree->bplus_tree_insert(a, 1));
 }
 
+
+TEST(Bpt, int_tree_delete) {
+    bplus_tree *tree = new bplus_tree(5, 10 ,10);
+    Value a(1);
+    Value b(2);
+    EXPECT_TRUE(tree->bplus_tree_insert(a, 1));
+    bplus_leaf *root = (bplus_leaf *)tree->root;
+    EXPECT_FALSE(tree->bplus_tree_delete(b));
+    EXPECT_TRUE(tree->bplus_tree_delete(a));
+}
+
 TEST(Bpt, int_tree_search) {
     bplus_tree *tree = new bplus_tree(5, 10 ,10);
     Value a(1);
@@ -39,6 +50,17 @@ TEST(Bpt, string_tree_insert) {
     bplus_leaf *root = (bplus_leaf *)tree->root;
     EXPECT_EQ(root->key[0].StrValue, "a");
     EXPECT_EQ(root->data[0], 1);
+}
+
+TEST(Bpt, string_tree_delete) {
+    bplus_tree *tree = new bplus_tree(5, 10 ,10);
+    Value a("a");
+    Value b("b");
+    EXPECT_TRUE(tree->bplus_tree_insert(a, 1));
+    bplus_leaf *root = (bplus_leaf *)tree->root;
+    EXPECT_FALSE(tree->bplus_tree_delete(b));
+    EXPECT_TRUE(tree->bplus_tree_delete(a));
+
 }
 
 TEST(Bpt, string_tree_search) {
