@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "action.h"
+#include "value.h"
 
 #define MIN_ORDER        3
 #define MAX_ORDER        64
@@ -57,7 +57,7 @@ public:
     bool bplus_tree_insert(Value, rid_t);
     rid_t bplus_tree_search(Value key);
     bool bplus_tree_delete(Value);
-    rid_t bplus_tree_get_range(Value, Value);
+    rid_t* bplus_tree_get_range(Value, Value);
     void bplus_tree_deinit();
 
 

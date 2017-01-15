@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <vector>
 
 #include "bpt.h"
 using namespace std;
@@ -671,3 +672,53 @@ bplus_tree::bplus_tree(int level, int order, int entries)
 
 bplus_tree::~bplus_tree() { 
 }
+
+rid_t*
+bplus_tree::bplus_tree_get_range(Value key1, Value key2)
+{
+    int i = 0;
+    Value min = key1 < key2 ? key1 : key2;
+    Value max = min == key1 ? key2 : key1;
+    bplus_node *node = root;
+    bplus_non_leaf *nln;
+    bplus_leaf *ln;
+
+    vector<rid_t> data;
+
+    while (node != NULL) {
+            switch (node->type) {
+            case BPLUS_TREE_NON_LEAF:
+                    nln = (struct bplus_non_leaf *)node;
+                    i = key_binary_search(nln->key, nln->children - 1, min);
+                    if (i >= 0) {
+                            node = nln->sub_ptr[i + 1];
+                    } else  {
+                            i = -i - 1;
+                            node = nln->sub_ptr[i];
+                    }
+                    break;
+            case BPLUS_TREE_LEAF:
+                    ln = (bplus_leaf *)node;
+                    i = key_binary_search(ln->key, ln->entries, min);
+                    if (i < 0) {
+                            i = -i - 1;
+                            if (i >= ln->entries) {
+                                    ln = ln->next;
+                            }
+                    }
+                    while (ln != NULL && (ln->key[i] < max || ln->key[i] == max)) {
+                            data.push_back(ln->data[i]);
+                            if (++i >= ln->entries) {
+                                    ln = ln->next;
+                                    i = 0;
+                            }
+                    }
+                    return data.data();
+            default:
+                    assert(0);
+            }
+    }
+
+    return 0;
+}
+
