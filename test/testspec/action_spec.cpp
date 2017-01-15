@@ -32,7 +32,7 @@ TEST(ActionSpecTest, PayloadSpecs) {
     };
 
     // Test default values
-    EXPECT_STREQ(rpayload.name, "RPayload");
+    EXPECT_EQ(rpayload.name, "RPayload");
     EXPECT_EQ(rpayload.type, ValueType::Undefined);
     EXPECT_EQ(rpayload.size, 0);
 
@@ -42,7 +42,7 @@ TEST(ActionSpecTest, PayloadSpecs) {
     };
 
     // Test default values
-    EXPECT_STREQ(ipayload.name, "IPayload");
+    EXPECT_EQ(ipayload.name, "IPayload");
 
     DPayload dpayload = {
         .name = "DPayload",
@@ -50,7 +50,7 @@ TEST(ActionSpecTest, PayloadSpecs) {
     };
 
     // Test default values
-    EXPECT_STREQ(dpayload.name, "DPayload");
+    EXPECT_EQ(dpayload.name, "DPayload");
     EXPECT_EQ(dpayload.value->type, ValueType::Undefined);
     EXPECT_EQ(dpayload.value->IntValue, 0);
 
@@ -71,14 +71,14 @@ TEST(ActionSpecTest, ActionSpec) {
     };
 
     Action actionr(rpayload);
-    EXPECT_STREQ(actionr.payload.r.name, "RPayload");
+    EXPECT_EQ(actionr.payload.r.name, "RPayload");
     EXPECT_EQ(actionr.type, ActionType::R);
 
     Action actioni(ipayload);
-    EXPECT_STREQ(actioni.payload.i.name, "IPayload");
+    EXPECT_EQ(actioni.payload.i.name, "IPayload");
     EXPECT_EQ(actioni.type, ActionType::I);
 
     Action actiond(dpayload);
-    EXPECT_STREQ(actiond.payload.d.name, "DPayload");
+    EXPECT_EQ(actiond.payload.d.name, "DPayload");
     EXPECT_EQ(actiond.type, ActionType::D);
 }

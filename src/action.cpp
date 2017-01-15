@@ -11,7 +11,7 @@ using namespace std;
 bool
 operator>(const Value &l, const Value &r) {
     if (l.type == ValueType::Integer) {
-        return l.IntValue > r.IntValue; 
+        return l.IntValue > r.IntValue;
     } else if (l.type == ValueType::String) {
         return strcmp(l.StrValue, r.StrValue) > 0;
     } else {
@@ -22,7 +22,7 @@ operator>(const Value &l, const Value &r) {
 bool
 operator!=(const Value &l, const Value &r) {
     if (l.type == ValueType::Integer) {
-        return l.IntValue != r.IntValue; 
+        return l.IntValue != r.IntValue;
     } else if (l.type == ValueType::String) {
         return strcmp(l.StrValue, r.StrValue) != 0;
     } else {
@@ -33,7 +33,7 @@ operator!=(const Value &l, const Value &r) {
 bool
 operator==(const Value &l, const Value &r) {
     if (l.type == ValueType::Integer) {
-        return l.IntValue == r.IntValue; 
+        return l.IntValue == r.IntValue;
     } else if (l.type == ValueType::String) {
         return strcmp(l.StrValue, r.StrValue) == 0;
     } else {
@@ -119,6 +119,31 @@ isValidValue(const char* input) {
         }
         return false;
     }
+}
+
+bool
+isValidInput(const char* input) {
+    if(input == NULL) {
+        return false;
+    }
+
+    if(input[0] == 'R') {
+        return isValidRInput(input);
+    } else if(input[0] == 'I') {
+        return isValidIInput(input);
+    } else if(input[0] == 'D') {
+        return isValidDInput(input);
+    } else if(input[0] == 'S') {
+        return isValidSInput(input);
+    } else if(input[0] == 'q') {
+        return isValidQInput(input);
+    } else if(input[0] == 'p') {
+        return isValidPInput(input);
+    } else if(input[0] == 'c') {
+        return isValidCInput(input);
+    }
+
+    return false;
 }
 
 bool
@@ -213,6 +238,40 @@ isValidSInput(const char* input) {
 }
 
 bool
+isValidQInput(const char* input) {
+    if(input == NULL || input[0] != 'q')
+        return false;
+
+    auto tokens = tokenize(input, ' ', true);
+
+    if((tokens.size() != 3 && tokens.size() != 4) || tokens[0] != "q")
+        return false;
+
+    if(tokens.size() == 3)
+        return isValidValue(tokens[2].c_str());
+
+    return (isValidValue(tokens[2].c_str()) && isValidValue(tokens[3].c_str()));
+}
+bool
+isValidPInput(const char* input) {
+    if(input == NULL || input[0] != 'p')
+        return false;
+
+    auto tokens = tokenize(input, ' ', true);
+
+    if(tokens.size() != 3 || tokens[0] != "p")
+        return false;
+
+    try{
+        if(std::stoi(tokens[2]) >= 0 && tokens[2].find('.') == string::npos)
+            return true;
+    } catch(const exception& e) {
+    }
+
+    return false;
+}
+
+bool
 isValidCInput(const char* input) {
     if(input == NULL || input[0] != 'c')
         return false;
@@ -223,27 +282,6 @@ isValidCInput(const char* input) {
         return false;
 
     return true;
-}
-
-bool
-isValidInput(const char* input) {
-    if(input == NULL) {
-        return false;
-    }
-
-    if(input[0] == 'R') {
-        return isValidRInput(input);
-    } else if(input[0] == 'I') {
-        return isValidIInput(input);
-    } else if(input[0] == 'D') {
-        return isValidDInput(input);
-    } else if(input[0] == 'S') {
-        return isValidSInput(input);
-    } else if(input[0] == 'c') {
-        return isValidCInput(input);
-    }
-
-    return false;
 }
 
 RPayload
@@ -297,6 +335,15 @@ getDPayload(const char* input) {
     DPayload r = {
         .name = tokens[1].c_str(),
         .value = createValue(tokens[2].c_str())
+    };
+    return r;
+}
+
+SPayload
+getSPayload(const char* input) {
+    auto tokens = tokenize(input, ',', true);
+    SPayload r = {
+        .name = tokens[1].c_str()
     };
     return r;
 }

@@ -104,38 +104,38 @@ static inline void removeRecord(Record*);
  *
  * */
 struct RPayload {
-    const char* name;               // Relation name
+    std::string name;               // Relation name
     ValueType type;                 // Key type in the relation
     unsigned int size;              // Record size for each record including key
 };
 
 struct IPayload {
-    const char* name;               // Relation name
+    std::string name;               // Relation name
     std::vector<Record> values;     // Values are of Key/Record pairs
 };
 
 struct DPayload {
-    const char* name;               // Relation name
+    std::string name;               // Relation name
     Value* value;                   // key-value of which a record to be delete
 };
 
 struct SPayload {
-    const char* name;
+    std::string name;
 };
 
 struct QPayload {
-    const char* name;
+    std::string name;
     Value* value1;
     Value* value2;
 };
 
 struct PPayload {
-    const char* name;
+    std::string name;
     uint16_t pid;
 };
 
 struct CPayload {
-    const char* name;
+    std::string name;
 };
 
 union Payload {
@@ -201,9 +201,9 @@ bool isValidInput(const char*);
 RPayload getRPayload(const char*);
 IPayload getIPayload(const char*);
 DPayload getDPayload(const char*);
-DPayload getSPayload(const char*);
-DPayload getQPayload(const char*);
-DPayload getPPayload(const char*);
-DPayload getCPayload(const char*);
+SPayload getSPayload(const char*);
+QPayload getQPayload(const char*);
+PPayload getPPayload(const char*);
+CPayload getCPayload(const char*);
 Action* getAction(const char*);
 #endif
