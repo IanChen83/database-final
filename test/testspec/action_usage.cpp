@@ -88,6 +88,52 @@ TEST(ActionUsageTest, ValidDInput) {
     EXPECT_TRUE(isValidInput("D, Student, \"10\""));
 }
 
+TEST(ActionUsageTest, InvalidSInput) {
+    EXPECT_FALSE(isValidInput("Scan, Student"));
+    EXPECT_FALSE(isValidInput("Sca Student"));
+    EXPECT_FALSE(isValidInput("Scan"));
+    EXPECT_FALSE(isValidInput("Scan "));
+    EXPECT_FALSE(isValidInput("Scan Student asdf"));
+}
+
+TEST(ActionUsageTest, ValidSInput) {
+    EXPECT_TRUE(isValidInput("Scan Student"));
+    EXPECT_TRUE(isValidInput("Scan  Student"));
+}
+
+TEST(ActionUsageTest, InvalidQInput) {
+    EXPECT_FALSE(isValidInput("q, Student"));
+    EXPECT_FALSE(isValidInput("q Student"));
+    EXPECT_FALSE(isValidInput("q"));
+    EXPECT_FALSE(isValidInput("q "));
+    EXPECT_FALSE(isValidInput("q Student asdf"));
+    EXPECT_FALSE(isValidInput("q Student \"asdf\" asdf"));
+    EXPECT_FALSE(isValidInput("q Student \"asdf\" 10"));
+    EXPECT_FALSE(isValidInput("q Student 10 \"asdf\""));
+    EXPECT_FALSE(isValidInput("q Student \"asdf\" \"asdf\" \"asdf\""));
+    EXPECT_FALSE(isValidInput("q Student 10 10 10"));
+}
+
+TEST(ActionUsageTest, ValidQInput) {
+    EXPECT_TRUE(isValidInput("q Student 10"));
+    EXPECT_TRUE(isValidInput("q Student 10 10"));
+    EXPECT_TRUE(isValidInput("q Student \"asdf\""));
+    EXPECT_TRUE(isValidInput("q Student \"asdf\" \"asdf2\""));
+}
+
+TEST(ActionUsageTest, InvalidCInput) {
+    EXPECT_FALSE(isValidInput("c, Student"));
+    EXPECT_FALSE(isValidInput("C Student"));
+    EXPECT_FALSE(isValidInput("c"));
+    EXPECT_FALSE(isValidInput(" c "));
+    EXPECT_FALSE(isValidInput("c Student asdf"));
+}
+
+TEST(ActionUsageTest, ValidCInput) {
+    EXPECT_TRUE(isValidInput("c Student"));
+    EXPECT_TRUE(isValidInput("c  Student"));
+}
+
 TEST(ActionUsageTest, getRPayload) {
     auto p1 = getRPayload("R,RPayload, String, 200");
     EXPECT_STREQ(p1.name, "RPayload");

@@ -10,7 +10,7 @@ using namespace std;
 bool
 operator<(const Value &l, const Value &r) {
     if (l.type == ValueType::Integer) {
-        return l.IntValue < r.IntValue; 
+        return l.IntValue < r.IntValue;
     } else if (l.type == ValueType::String) {
         return strcmp(l.StrValue, r.StrValue) < 0;
     }
@@ -176,6 +176,32 @@ isValidDInput(const char* input) {
 }
 
 bool
+isValidSInput(const char* input) {
+    if(input == NULL || input[0] != 'S')
+        return false;
+
+    auto tokens = tokenize(input, ' ', true);
+
+    if(tokens.size() != 2 || tokens[0] != "Scan")
+        return false;
+
+    return true;
+}
+
+bool
+isValidCInput(const char* input) {
+    if(input == NULL || input[0] != 'c')
+        return false;
+
+    auto tokens = tokenize(input, ' ', true);
+
+    if(tokens.size() != 2 || tokens[0] != "c")
+        return false;
+
+    return true;
+}
+
+bool
 isValidInput(const char* input) {
     if(input == NULL) {
         return false;
@@ -187,7 +213,13 @@ isValidInput(const char* input) {
         return isValidIInput(input);
     } else if(input[0] == 'D') {
         return isValidDInput(input);
+    } else if(input[0] == 'S') {
+        return isValidSInput(input);
+    } else if(input[0] == 'c') {
+        return isValidCInput(input);
     }
+
+    return false;
 }
 
 RPayload

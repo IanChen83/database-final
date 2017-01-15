@@ -6,7 +6,7 @@
 #include <utility>
 
 /*
- * There are three types of action:
+ * There are seven types of action:
  *
  * R: Define a new relation
  *      R, Relation-name, key-type, record-length
@@ -17,9 +17,22 @@
  * D: Delete a record by its key
  *      D, Relation-name, key-value
  *
+ * S: Scan index file
+ *      Scan Relation-name
+ *
+ * Q: Query by index
+ *      q Relation-name key-value
+ *      q Relation-name key-value1 key-value2
+ *
+ * P: Display data page of a relation
+ *      p Relation-name page-id
+ *
+ * C: Print file and index statistics
+ *      c Relation-name
+ *
  * U: Unknown action type, implementation defined
  * */
-enum ActionType { U, R, I, D };
+enum ActionType { U, R, I, D, S, Q, P, C };
 
 
 /*
@@ -101,7 +114,26 @@ struct IPayload {
 
 struct DPayload {
     const char* name;               // Relation name
-    Value* value;                    // key-value of which a record to be delete
+    Value* value;                   // key-value of which a record to be delete
+};
+
+struct SPayload {
+    const char* name;
+};
+
+struct QPayload {
+    const char* name;
+    Value* value1;
+    Value* value2;
+};
+
+struct PPayload {
+    const char* name;
+    uint16_t pid;
+};
+
+struct CPayload {
+    const char* name;
 };
 
 union Payload {
@@ -110,9 +142,17 @@ union Payload {
     Payload(RPayload _r): r(_r) {}
     Payload(IPayload _i): i(_i) {}
     Payload(DPayload _d): d(_d) {}
+    Payload(SPayload _s): s(_s) {}
+    Payload(QPayload _q): q(_q) {}
+    Payload(PPayload _p): p(_p) {}
+    Payload(CPayload _c): c(_c) {}
     RPayload r;
     IPayload i;
     DPayload d;
+    SPayload s;
+    QPayload q;
+    PPayload p;
+    CPayload c;
 };
 
 struct Action {
@@ -120,6 +160,10 @@ struct Action {
     Action(RPayload _r): payload(_r), type(ActionType::R) {}
     Action(IPayload _i): payload(_i), type(ActionType::I) {}
     Action(DPayload _d): payload(_d), type(ActionType::D) {}
+    Action(SPayload _s): payload(_s), type(ActionType::S) {}
+    Action(QPayload _q): payload(_q), type(ActionType::Q) {}
+    Action(PPayload _p): payload(_p), type(ActionType::P) {}
+    Action(CPayload _c): payload(_c), type(ActionType::C) {}
 
     ActionType type;
     Payload payload;
@@ -132,12 +176,12 @@ struct Action {
  * 1. begin with "
  * 2. end with "
  * 3. have content (those between double quotes) more that one byte
- * 4. have content not containing " or ;
+ * 4. have content not containing "
  *
  * A valid key should
  * 1. if it is of ValueType::Integer, it should be able to be parsed by atoi
  * 2. if it is of ValueType::String, it should start and end with " and not contain
- *    double quotes and ; in its content.
+ *    double quotes.
  *
  * */
 bool isValidRecord(const char*);
@@ -146,10 +190,18 @@ bool isValidValue(const char*);
 bool isValidRInput(const char*);
 bool isValidIInput(const char*);
 bool isValidDInput(const char*);
+bool isValidSInput(const char*);
+bool isValidQInput(const char*);
+bool isValidPInput(const char*);
+bool isValidCInput(const char*);
 bool isValidInput(const char*);
 
 RPayload getRPayload(const char*);
 IPayload getIPayload(const char*);
 DPayload getDPayload(const char*);
+DPayload getSPayload(const char*);
+DPayload getQPayload(const char*);
+DPayload getPPayload(const char*);
+DPayload getCPayload(const char*);
 Action* getAction(const char*);
 #endif
