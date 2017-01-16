@@ -255,17 +255,17 @@ getIPayload(const char* input) {
             values.emplace_back(
                     createValue(token[0].substr(1, token[0].size() - 2).c_str()),
                     recordValue
-                );
+                    );
         } else {
             values.emplace_back(
                     createValue(std::stoi(token[0])),
                     recordValue
-                );
+                    );
         }
     }
 
     IPayload r = {
-        .name = tokens[1].c_str(),
+        .name = tokens[1],
         .values = values
     };
 
@@ -276,7 +276,7 @@ DPayload
 getDPayload(const char* input) {
     auto tokens = tokenize(input, ',', true);
     DPayload r = {
-        .name = tokens[1].c_str(),
+        .name = tokens[1],
         .value = createValue(tokens[2].c_str())
     };
     return r;
@@ -286,8 +286,52 @@ SPayload
 getSPayload(const char* input) {
     auto tokens = tokenize(input, ',', true);
     SPayload r = {
-        .name = tokens[1].c_str()
+        .name = tokens[1]
     };
+    return r;
+}
+
+QPayload
+getQPayload(const char* input) {
+    auto tokens = tokenize(input, ',', true);
+
+    Value* value1 = NULL;
+    Value* value2 = NULL;
+
+    if(tokens.size() == 3) {
+        value1 = createValue(tokens[2].c_str());
+    } else {
+        value1 = createValue(tokens[2].c_str());
+        value2 = createValue(tokens[3].c_str());
+    }
+
+    QPayload r = {
+        .name = tokens[1],
+        .value1 = value1,
+        .value2 = value2
+    };
+
+    return r;
+}
+
+PPayload
+getPPayload(const char* input) {
+    auto tokens = tokenize(input, ',', true);
+    PPayload r = {
+        .name = tokens[1],
+        .pid = (uint16_t)std::stoi(tokens[2])
+    };
+
+    return r;
+}
+
+CPayload
+getCPayload(const char* input) {
+    auto tokens = tokenize(input, ',', true);
+    CPayload r = {
+        .name = tokens[1]
+    };
+
     return r;
 }
 
@@ -302,4 +346,14 @@ getAction(const char* input) {
         return new Action(getIPayload(input));
     else if(input[0] == 'D')
         return new Action(getDPayload(input));
+    else if(input[0] == 'S')
+        return new Action(getSPayload(input));
+    else if(input[0] == 'q')
+        return new Action(getQPayload(input));
+    else if(input[0] == 'p')
+        return new Action(getPPayload(input));
+    else if(input[0] == 'c')
+        return new Action(getCPayload(input));
+
+    return NULL;
 }
