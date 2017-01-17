@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-#include <vector>
+#include <iostream>
 
 #include "bpt.h"
 using namespace std;
@@ -542,6 +542,7 @@ bplus_tree::leaf_insert(bplus_leaf *leaf, Value key, rid_t data)
     int insert = key_binary_search(leaf->key, leaf->entries, key);
     if (insert >= 0) {
         /* Already exists */
+        cout << "Already exists";
         return false;
     }
     insert = -insert - 1;
@@ -624,7 +625,7 @@ bplus_tree::leaf_insert(bplus_leaf *leaf, Value key, rid_t data)
         }
     }
 
-    return 0;
+    return true;
 }
 
 
@@ -652,6 +653,7 @@ bplus_tree::bplus_tree_insert(Value key, rid_t data)
         ln = (bplus_leaf *)node;
         return leaf_insert(ln, key, data);
     default:
+        cout << "no type";
         return false;
     }
     }
@@ -673,7 +675,7 @@ bplus_tree::bplus_tree(int level, int order, int entries)
 bplus_tree::~bplus_tree() { 
 }
 
-rid_t*
+vector<rid_t>
 bplus_tree::bplus_tree_get_range(Value key1, Value key2)
 {
     int i = 0;
@@ -706,19 +708,19 @@ bplus_tree::bplus_tree_get_range(Value key1, Value key2)
                                     ln = ln->next;
                             }
                     }
-                    while (ln != NULL && (ln->key[i] < max || ln->key[i] == max)) {
+                    while (ln != NULL && (ln->key[i] <= max)) {
                             data.push_back(ln->data[i]);
                             if (++i >= ln->entries) {
                                     ln = ln->next;
                                     i = 0;
                             }
                     }
-                    return data.data();
+                    return data;
             default:
                     assert(0);
             }
     }
 
-    return 0;
+    return data;
 }
 

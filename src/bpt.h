@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <vector>
 #include "value.h"
 
 #define MIN_ORDER        3
@@ -11,6 +12,8 @@
 #define MAX_ENTRIES      64
 #define MAX_LEVEL        10
 /* the encapulated B+ tree */
+
+using namespace std;
 
 typedef int32_t rid_t;
 
@@ -57,7 +60,7 @@ public:
     bool bplus_tree_insert(Value, rid_t);
     rid_t bplus_tree_search(Value key);
     bool bplus_tree_delete(Value);
-    rid_t* bplus_tree_get_range(Value, Value);
+    vector<rid_t> bplus_tree_get_range(Value, Value);
     void bplus_tree_deinit();
 
 

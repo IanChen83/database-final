@@ -37,10 +37,24 @@ TEST(Bpt, int_tree_delete) {
 TEST(Bpt, int_tree_search) {
     bplus_tree *tree = new bplus_tree(5, 10 ,10);
     Value a(1);
-    tree->bplus_tree_insert(a, 1);
+    Value b(2);
+    Value c(3);
+    Value d(4);
+    Value e(5);
+    EXPECT_TRUE(tree->bplus_tree_insert(a, 1));
+    EXPECT_TRUE(tree->bplus_tree_insert(b, 2));
+    EXPECT_TRUE(tree->bplus_tree_insert(c, 3));
+    EXPECT_TRUE(tree->bplus_tree_insert(d, 4));
+    EXPECT_TRUE(tree->bplus_tree_insert(e, 5));
     bplus_leaf *root = (bplus_leaf *)tree->root;
     EXPECT_EQ(root->key[0].IntValue, 1);
     EXPECT_EQ(tree->bplus_tree_search(a), 1);
+    vector<rid_t> range_search = tree->bplus_tree_get_range(a, d);
+    EXPECT_EQ(range_search[0], 1);
+    EXPECT_EQ(range_search[1], 2);
+    EXPECT_EQ(range_search[2], 3);
+    EXPECT_EQ(range_search[3], 4);
+    EXPECT_EQ(range_search.size(), 4);
 }
 
 TEST(Bpt, string_tree_insert) {
