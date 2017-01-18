@@ -8,8 +8,8 @@
 #include "value.h"
 
 #define MIN_ORDER        3
-#define MAX_ORDER        128
-#define MAX_ENTRIES      128
+#define MAX_ORDER        100
+#define MAX_ENTRIES      100
 #define MAX_LEVEL        10
 /* the encapulated B+ tree */
 

@@ -14,7 +14,11 @@ class Relation {
         Relation(ValueType type, unsigned int length)
         : type(type), r_length(length)
         {
-            tree = new bplus_tree(10, 4, 4, type);
+            if (type == ValueType::String) {
+                tree = new bplus_tree(10, 42, 42, type);
+            } else {
+                tree = new bplus_tree(10, 85, 85, type);
+            }
             rm = new RecordManager();
         }
         ~Relation() {
@@ -45,6 +49,13 @@ int main(int argc, char* argv[]) {
                 break;
             }
             case ActionType::I :{
+                string name = action->payload.i.name;
+                Relation* relation = relations[name];
+                vector<Record> records = action->payload.i.values;
+                for (int i=0, l=records.size(); i<l; i++) {
+                    rid_t rid = relation->rm->addRecord(records[i]);
+                    relation->tree->bplus_tree_insert(*(get<0>(records[i])), rid);
+                }
                 break;
             }
             case ActionType::D :
@@ -56,11 +67,14 @@ int main(int argc, char* argv[]) {
             }
             case ActionType::Q :{
                 string name = action->payload.q.name;
-                Relation* rel = relations[name];
+                
+                Relation* r= relations[name]; 
                 break;
             }
-            case ActionType::P :
-            break;
+            case ActionType::P :{
+
+                break;
+            }
             case ActionType::C :
             break;
             default:
