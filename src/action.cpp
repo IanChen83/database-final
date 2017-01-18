@@ -2,6 +2,7 @@
 #include "util.h"
 #include <algorithm>
 #include <assert.h>
+#include <tuple>
 #include <string>
 #include <cstring>
 #include <iostream>
@@ -9,12 +10,14 @@
 using namespace std;
 
 Record*
-createRecord(int v, const char* d) {
+createRecord(int v, const char* d, unsigned int len) {
+    // return new Record(new Value(v), d);
     return NULL;
 }
 
 Record*
-createRecord(const char* v, const char* d) {
+createRecord(const char* v, const char* d, unsigned int len) {
+    // return new Record(new Value(v), d);
     return NULL;
 }
 
@@ -28,7 +31,12 @@ getValue(string input) {
 
 static inline void
 removeRecord(Record* v) {
-    delete[] v;
+    Value* value;
+    const char* data;
+    unsigned int len;
+    tie(value, data, len) = *v;
+    delete value;
+    delete[] data;
 }
 
 bool
@@ -260,7 +268,7 @@ getIPayload(const char* input) {
         char* recordValue = new char[token[1].size() - 1];
         strcpy(recordValue, token[1].substr(1, token[1].size() - 2).c_str());
         auto value = getValue(token[0]);
-        values.emplace_back(value, recordValue);
+        values.emplace_back(value, recordValue, strlen(recordValue));
     }
 
     IPayload r = {

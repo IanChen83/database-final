@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <tuple>
 #include "value.h"
 
 /*
@@ -43,10 +44,10 @@ enum ActionType { U, R, I, D, S, Q, P, C };
  * call removeRecord(Record*) to remove a record
  *
  * */
-typedef std::pair<Value*, const char*> Record;
+typedef std::tuple<Value*, const char*, unsigned int> Record;
 
-Record* createRecord(int, const char*);
-Record* createRecord(const char*, const char*);
+Record* createRecord(int, const char*, unsigned int);
+Record* createRecord(const char*, const char*, unsigned int);
 
 static inline void removeRecord(Record*);
 /*

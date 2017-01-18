@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include <iostream>
+#include <tuple>
 #include "action.h"
 
 using namespace std;
@@ -159,12 +160,12 @@ TEST(ActionUsageTest, getIPayload) {
     auto p1 = getIPayload("I, IPayload, 1, \"Record1\"; \"2\", \"Record2\"");
     EXPECT_EQ(p1.name, "IPayload");
     ASSERT_EQ(p1.values.size(), 2);
-    EXPECT_EQ(p1.values[0].first->type, ValueType::Integer);
-    EXPECT_EQ(p1.values[0].first->IntValue, 1);
-    EXPECT_STREQ(p1.values[0].second, "Record1");
-    EXPECT_EQ(p1.values[1].first->type, ValueType::String);
-    EXPECT_STREQ(p1.values[1].first->StrValue, "2");
-    EXPECT_STREQ(p1.values[1].second, "Record2");
+    EXPECT_EQ(std::get<0>(p1.values[0])->type, ValueType::Integer);
+    EXPECT_EQ(std::get<0>(p1.values[0])->IntValue, 1);
+    EXPECT_STREQ(std::get<1>(p1.values[0]), "Record1");
+    EXPECT_EQ(std::get<0>(p1.values[1])->type, ValueType::String);
+    EXPECT_STREQ(std::get<0>(p1.values[1])->StrValue, "2");
+    EXPECT_STREQ(std::get<1>(p1.values[1]), "Record2");
 }
 
 TEST(ActionUsageTest, getSPayload) {
