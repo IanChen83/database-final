@@ -37,7 +37,7 @@ key_binary_search(Value *arr, int len, Value target) {
 
 static inline bplus_non_leaf *
 non_leaf_new(void) {
-    bplus_non_leaf *node = new bplus_non_leaf;
+    bplus_non_leaf *node = new bplus_non_leaf();
     assert(node != NULL);
     node->type = BPLUS_TREE_NON_LEAF;
     return node;
@@ -45,7 +45,7 @@ non_leaf_new(void) {
 
 static inline bplus_leaf *
 leaf_new(void) {
-    bplus_leaf *node = new bplus_leaf;
+    bplus_leaf *node = new bplus_leaf();
     assert(node != NULL);
     node->type = BPLUS_TREE_LEAF;
     return node;
@@ -193,7 +193,7 @@ bplus_tree::non_leaf_remove(bplus_non_leaf *node, int remove, int level)
             }
         }
     }
-    
+
     /* simple deletion */
     assert(node->children > 2);
     for (; remove < node->children - 2; remove++) {
@@ -669,10 +669,12 @@ bplus_tree::bplus_tree_insert(Value key, rid_t data)
 
 bplus_tree::bplus_tree(int level, int order, int entries)
     : level(level), order(order), entries(entries), root(NULL) {
+        head = new bplus_node*[level];
 }
 
 
-bplus_tree::~bplus_tree() { 
+bplus_tree::~bplus_tree() {
+    delete[] head;
 }
 
 vector<rid_t>

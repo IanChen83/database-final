@@ -29,22 +29,29 @@ typedef struct {
     off_t leaf_offset; /* where is the first leaf */
 } meta_t;
 
-class bplus_node {
-    public:
+struct bplus_node {
         int type;
         bplus_node *parent;
+    virtual ~bplus_node() {};
 };
 
-class bplus_non_leaf: public bplus_node {
-    public:
+struct bplus_non_leaf: bplus_node {
+    bplus_non_leaf(): bplus_node() {
+
+    }
         bplus_non_leaf *next;
         int children;
         Value key[MAX_ORDER - 1];
         bplus_node *sub_ptr[MAX_ORDER];
 };
 
-class bplus_leaf: public bplus_node {
-    public:
+struct bplus_leaf: bplus_node {
+    bplus_leaf(): bplus_node() {
+
+    }
+    ~bplus_leaf() {
+
+    }
         bplus_leaf *next;
         int entries;
         Value key[MAX_ENTRIES];
@@ -82,6 +89,6 @@ public:
     int level;
     int value_size;
     bplus_node *root;
-    bplus_node *head[];
+    bplus_node **head;
 };
 #endif
