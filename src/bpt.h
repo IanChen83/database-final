@@ -68,6 +68,8 @@ public:
     rid_t bplus_tree_search(Value key);
     bool bplus_tree_delete(Value);
     vector<rid_t> bplus_tree_get_range(Value, Value);
+    //return pair<index, leaf>
+    pair<int, int> get_page_content();
     void bplus_tree_deinit();
 
 
@@ -87,6 +89,8 @@ public:
     int order;
     int entries;
     int level;
+    int non_leaf_num;
+    int leaf_num;
     int value_size;
     bplus_node *root;
     bplus_node **head;
