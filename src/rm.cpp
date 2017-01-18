@@ -1,4 +1,5 @@
 #include "page.h"
+#include "action.h"
 #include "rm.h"
 
 RecordManager::RecordManager() : _size(0) {}
@@ -20,36 +21,32 @@ RecordManager::size() {
 }
 
 int32_t
-RecordManager::addRecord(const void* data, unsigned int len) {
-    if(len > PAGE_SIZE) return -1;
-    int16_t r = -1, pid = pages.size() - 1;
+RecordManager::addRecord(const Record& record) {
+    // if(len > PAGE_SIZE) return -1;
+    // int16_t r = -1, pid = pages.size() - 1;
 
-    for(auto page: pages) {
-        r = add_record(page, data, len);
-        if(r == -1) continue;
-    }
+    // for(auto page: pages) {
+    //     r = add_record(page, data, len);
+    //     if(r == -1) continue;
+    // }
 
-    if(r == -1) {
-        // No available space, create new page
-        auto x = create_page();
-        pid = pages.size() - 1;
-        r = add_record(x, data, len);
-        pages.push_back(x);
-    }
+    // if(r == -1) {
+    //     // No available space, create new page
+    //     auto x = create_page();
+    //     pid = pages.size() - 1;
+    //     r = add_record(x, data, len);
+    //     pages.push_back(x);
+    // }
 
-    ++_size;
-    return to_rid(pid, r);
+    // ++_size;
+    // return to_rid(pid, r);
 }
 
-RecordResponse
+Record
 RecordManager::getRecord(int32_t rid) {
     int16_t pid = get_pid(rid), sn = get_sn(rid);
     auto page = pages[pid];
-    RecordResponse ret = {
-        .data = get_record(page, sn),
-        .length = record_len(page, sn)
-    };
-    return ret;
+    // return;
 }
 
 void

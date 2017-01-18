@@ -9,16 +9,19 @@
 
 using namespace std;
 
-Record*
-createRecord(int v, const char* d) {
-    // return new Record(new Value(v), d);
-    return NULL;
+Record
+createRecord(int, const string&) {
+
 }
 
-Record*
-createRecord(const char* v, const char* d) {
-    // return new Record(new Value(v), d);
-    return NULL;
+Record
+createRecord(const char*, const string&) {
+
+}
+
+static inline void
+removeRecord(const Record& v) {
+    delete std::get<0>(v);
 }
 
 Value*
@@ -27,11 +30,6 @@ getValue(string input) {
         return createValue(input.substr(1, input.size() - 2).c_str());
     else
         return createValue(std::stoi(input));
-}
-
-static inline void
-removeRecord(Record* v) {
-    delete std::get<0>(*v);
 }
 
 bool

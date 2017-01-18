@@ -11,7 +11,7 @@ using namespace std;
 
 class Relation {
     public:
-        Relation(ValueType type, unsigned int length) 
+        Relation(ValueType type, unsigned int length)
         : type(type), r_length(length)
         {
             tree = new bplus_tree(10, 4, 4, type);
@@ -29,7 +29,7 @@ class Relation {
 
 
 int main(int argc, char* argv[]) {
-    char* filename = "../ProjectB_data.txt";
+    const char* filename = "../ProjectB_data.txt";
     char line[SIZE];
     fstream fin;
     fin.open(filename,ios::in);
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
             }
             case ActionType::Q :{
                 string name = action->payload.q.name;
-                Relation* = relations[name]; 
+                Relation* rel = relations[name];
                 break;
             }
             case ActionType::P :

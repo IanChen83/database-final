@@ -46,10 +46,10 @@ enum ActionType { U, R, I, D, S, Q, P, C };
  * */
 typedef std::tuple<Value*, std::string> Record;
 
-Record* createRecord(int, const char*);
-Record* createRecord(const char*, const char*);
+Record createRecord(int, const std::string&);
+Record createRecord(const char*, const std::string&);
 
-static inline void removeRecord(Record*);
+static inline void removeRecord(const Record&);
 /*
  * An input data set has many lines, while each line has one of the three kinds of action:
  * R, I, or D.
