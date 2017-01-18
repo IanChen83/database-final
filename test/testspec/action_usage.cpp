@@ -162,10 +162,10 @@ TEST(ActionUsageTest, getIPayload) {
     ASSERT_EQ(p1.values.size(), 2);
     EXPECT_EQ(std::get<0>(p1.values[0])->type, ValueType::Integer);
     EXPECT_EQ(std::get<0>(p1.values[0])->IntValue, 1);
-    EXPECT_STREQ(std::get<1>(p1.values[0]), "Record1");
+    EXPECT_EQ(std::get<1>(p1.values[0]), "Record1");
     EXPECT_EQ(std::get<0>(p1.values[1])->type, ValueType::String);
     EXPECT_STREQ(std::get<0>(p1.values[1])->StrValue, "2");
-    EXPECT_STREQ(std::get<1>(p1.values[1]), "Record2");
+    EXPECT_EQ(std::get<1>(p1.values[1]), "Record2");
 }
 
 TEST(ActionUsageTest, getSPayload) {

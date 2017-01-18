@@ -44,10 +44,10 @@ enum ActionType { U, R, I, D, S, Q, P, C };
  * call removeRecord(Record*) to remove a record
  *
  * */
-typedef std::tuple<Value*, const char*, unsigned int> Record;
+typedef std::tuple<Value*, std::string> Record;
 
-Record* createRecord(int, const char*, unsigned int);
-Record* createRecord(const char*, const char*, unsigned int);
+Record* createRecord(int, const char*);
+Record* createRecord(const char*, const char*);
 
 static inline void removeRecord(Record*);
 /*
