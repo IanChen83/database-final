@@ -404,7 +404,7 @@ bplus_tree::bplus_tree_search(Value key) {
         if (i >= 0) {
         return ln->data[i];
         } else {
-        return 0;
+        return -1;
         }
     default:
         assert(0);
