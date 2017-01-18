@@ -48,23 +48,21 @@ TEST(Bpt, int_tree_search) {
     EXPECT_EQ(range_search.size(), 4);
 }
 
-TEST(Bpt, int_tree_get_content) {
+TEST(Bpt, int_tree_get_num) {
     bplus_tree *tree = new bplus_tree(10, 3, 3, ValueType::Integer);
     for(int i = 0; i < 10; i++) {
         EXPECT_TRUE(tree->bplus_tree_insert(Value(i), i));
     }
-    pair<int, int> answer = tree->get_page_content();
-    EXPECT_EQ(answer.first, 5);
-    EXPECT_EQ(answer.second, 3);
+    EXPECT_EQ(tree->get_leaf_num(), 5);
+    EXPECT_EQ(tree->get_non_leaf_num(), 3);
     tree->bplus_tree_delete(Value(6));
     tree->bplus_tree_delete(Value(7));
     tree->bplus_tree_delete(Value(8));
     tree->bplus_tree_insert(Value(6), 6);
     tree->bplus_tree_insert(Value(7), 7);
     tree->bplus_tree_insert(Value(8), 8);
-    answer = tree->get_page_content();
-    EXPECT_EQ(answer.first, 5);
-    EXPECT_EQ(answer.second, 3);
+    EXPECT_EQ(tree->get_leaf_num(), 5);
+    EXPECT_EQ(tree->get_non_leaf_num(), 3);
 }
 
 TEST(Bpt, string_tree_insert) {

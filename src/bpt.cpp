@@ -681,11 +681,16 @@ bplus_tree::~bplus_tree() {
     delete[] head;
 }
 
-pair<int, int>
-bplus_tree::get_page_content() {
-    cout<<leaf_num<<non_leaf_num<<endl;
-    return make_pair(leaf_num, non_leaf_num);
+int
+bplus_tree::get_leaf_num() {
+    return leaf_num;
 }
+
+int
+bplus_tree::get_non_leaf_num() {
+    return non_leaf_num;
+}
+
 
 vector<rid_t>
 bplus_tree::bplus_tree_get_range(Value key1, Value key2)

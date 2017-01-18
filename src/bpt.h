@@ -8,8 +8,8 @@
 #include "value.h"
 
 #define MIN_ORDER        3
-#define MAX_ORDER        64
-#define MAX_ENTRIES      64
+#define MAX_ORDER        128
+#define MAX_ENTRIES      128
 #define MAX_LEVEL        10
 /* the encapulated B+ tree */
 
@@ -77,6 +77,9 @@ public:
     bplus_non_leaf* non_leaf_new();
     void non_leaf_delete(bplus_non_leaf*);
     void leaf_delete(bplus_leaf*);
+
+    int get_leaf_num();
+    int get_non_leaf_num();
 
 
 #ifndef UNIT_TEST
