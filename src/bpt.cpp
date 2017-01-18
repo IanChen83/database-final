@@ -35,31 +35,36 @@ key_binary_search(Value *arr, int len, Value target) {
     }
 }
 
-static inline bplus_non_leaf *
-non_leaf_new(void) {
+bplus_non_leaf*
+bplus_tree::non_leaf_new() {
     bplus_non_leaf *node = new bplus_non_leaf();
     assert(node != NULL);
     node->type = BPLUS_TREE_NON_LEAF;
+    non_leaf_num++;
     return node;
 }
 
-static inline bplus_leaf *
-leaf_new(void) {
+bplus_leaf*
+bplus_tree::leaf_new() {
     bplus_leaf *node = new bplus_leaf();
     assert(node != NULL);
     node->type = BPLUS_TREE_LEAF;
+    leaf_num++;
     return node;
 }
 
-static inline void
-non_leaf_delete(bplus_non_leaf *node) {
+void
+bplus_tree::non_leaf_delete(bplus_non_leaf *node) {
     delete node;
+    non_leaf_num--;
     node = NULL;
 }
 
-static inline void
-leaf_delete(bplus_leaf *node) {
+void
+bplus_tree::leaf_delete(bplus_leaf *node) {
     delete node;
+    leaf_num--;
+    cout<<leaf_num<<"leaf_page delete\n";
     node = NULL;
 }
 
@@ -133,7 +138,6 @@ bplus_tree::non_leaf_remove(bplus_non_leaf *node, int remove, int level)
                     /* delete merged node */
                     sibling->next = node->next;
                     non_leaf_delete(node);
-                    non_leaf_num--;
                     /* trace upwards */
                     non_leaf_remove(parent, i, level + 1);
                 }
@@ -176,7 +180,6 @@ bplus_tree::non_leaf_remove(bplus_non_leaf *node, int remove, int level)
                     /* delete merged sibling */
                     node->next = sibling->next;
                     non_leaf_delete(sibling);
-                    non_leaf_num--;
                     /* trace upwards */
                     non_leaf_remove(parent, i + 1, level + 1);
                 }
@@ -191,7 +194,6 @@ bplus_tree::non_leaf_remove(bplus_non_leaf *node, int remove, int level)
                 root = node->sub_ptr[0];
                 head[level] = NULL;
                 non_leaf_delete(node);
-                non_leaf_num--;
                 return;
             }
         }
@@ -285,7 +287,6 @@ bplus_tree::leaf_remove(bplus_leaf *leaf, Value key)
                     /* delete merged leaf */
                     sibling->next = leaf->next;
                     leaf_delete(leaf);
-                    non_leaf_num--;
                     /* trace upwards */
                     non_leaf_remove(parent, i, 1);
                 }
@@ -319,7 +320,6 @@ bplus_tree::leaf_remove(bplus_leaf *leaf, Value key)
                     /* delete right sibling */
                     leaf->next = sibling->next;
                     leaf_delete(sibling);
-                    leaf_num--;
                     /* trace upwards */
                     non_leaf_remove(parent, i + 1, 1);
                 }
@@ -333,7 +333,6 @@ bplus_tree::leaf_remove(bplus_leaf *leaf, Value key)
                 root = NULL;
                 head[0] = NULL;
                 leaf_delete(leaf);
-                leaf_num--;
                 return true;
             }
         }
@@ -433,7 +432,6 @@ bplus_tree::non_leaf_insert(bplus_non_leaf *node, bplus_node *sub_node, Value ke
         split = (order + 1) / 2;
         /* splited sibling node */
         sibling = non_leaf_new();
-        non_leaf_num ++;
         sibling->next = node->next;
         node->next = sibling;
         /* non-leaf node's children always equals to split + 1 after insertion */
@@ -512,16 +510,14 @@ bplus_tree::non_leaf_insert(bplus_non_leaf *node, bplus_node *sub_node, Value ke
     if (split) {
         bplus_non_leaf *parent = (bplus_non_leaf*)node->parent;
         if (parent == NULL) {
-            if (++level >= level) {
+            if (++level >= m_level) {
                 fprintf(stderr, "!!Panic: Level exceeded, please expand the tree level, non-leaf order or leaf entries for element capacity!\n");
                 node->next = sibling->next;
                 non_leaf_delete(sibling);
-                non_leaf_num--;
                 return false;
             }
             /* new parent */
             parent = non_leaf_new();
-            non_leaf_num ++;
             parent->key[0] = split_key;
             parent->sub_ptr[0] = node;
             parent->sub_ptr[1] = sibling;
@@ -551,7 +547,6 @@ bplus_tree::leaf_insert(bplus_leaf *leaf, Value key, rid_t data)
     int insert = key_binary_search(leaf->key, leaf->entries, key);
     if (insert >= 0) {
         /* Already exists */
-        cout << "Already exists";
         return false;
     }
     insert = -insert - 1;
@@ -562,7 +557,6 @@ bplus_tree::leaf_insert(bplus_leaf *leaf, Value key, rid_t data)
         split = (entries + 1) / 2;
         /* splited sibling node */
         sibling = leaf_new();
-        leaf_num ++;
         sibling->next = leaf->next;
         leaf->next = sibling;
         /* leaf node's entries always equals to split after insertion */
@@ -619,7 +613,6 @@ bplus_tree::leaf_insert(bplus_leaf *leaf, Value key, rid_t data)
         if (parent == NULL) {
             /* new parent */
             parent = non_leaf_new();
-            non_leaf_num ++;
             parent->key[0] = sibling->key[0];
             parent->sub_ptr[0] = (bplus_node *)leaf;
             parent->sub_ptr[1] = (bplus_node *)sibling;
@@ -671,7 +664,6 @@ bplus_tree::bplus_tree_insert(Value key, rid_t data)
 
     /* new root */
     root = leaf_new();
-    leaf_num ++;
     ((bplus_leaf*)root)->key[0] = key;
     ((bplus_leaf*)root)->data[0] = data;
     ((bplus_leaf*)root)->entries = 1;
@@ -679,8 +671,8 @@ bplus_tree::bplus_tree_insert(Value key, rid_t data)
     return true;
 }
 
-bplus_tree::bplus_tree(int level, int order, int entries)
-    : level(level), order(order), entries(entries), root(NULL), non_leaf_num(0), leaf_num(0) {
+bplus_tree::bplus_tree(int level, int order, int entries, ValueType vp)
+    : m_level(level), order(order), entries(entries), root(NULL), non_leaf_num(0), leaf_num(0), valueType(vp) {
     head = new bplus_node*[level];
 }
 
@@ -691,6 +683,7 @@ bplus_tree::~bplus_tree() {
 
 pair<int, int>
 bplus_tree::get_page_content() {
+    cout<<leaf_num<<non_leaf_num<<endl;
     return make_pair(leaf_num, non_leaf_num);
 }
 

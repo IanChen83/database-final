@@ -60,7 +60,7 @@ struct bplus_leaf: bplus_node {
 
 class bplus_tree {
 public:
-    bplus_tree(int, int, int);
+    bplus_tree(int, int, int, ValueType);
     ~bplus_tree();
     void bplus_tree_dump();
     rid_t bplus_tree_get(Value);
@@ -71,6 +71,12 @@ public:
     //return pair<index, leaf>
     pair<int, int> get_page_content();
     void bplus_tree_deinit();
+
+    // helper
+    bplus_leaf* leaf_new();
+    bplus_non_leaf* non_leaf_new();
+    void non_leaf_delete(bplus_non_leaf*);
+    void leaf_delete(bplus_leaf*);
 
 
 #ifndef UNIT_TEST
@@ -88,10 +94,10 @@ public:
     //// data member
     int order;
     int entries;
-    int level;
+    int m_level;
     int non_leaf_num;
     int leaf_num;
-    int value_size;
+    ValueType valueType;
     bplus_node *root;
     bplus_node **head;
 };
