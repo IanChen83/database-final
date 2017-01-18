@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 #include "page.h"
+#include "rm.h"
+#include <algorithm>
 #include <iostream>
 
 using namespace std;
@@ -82,3 +84,45 @@ TEST(PageTest, SqueezeRecord) {
 
     delete_page(page);
 }
+
+class RecordTest : public ::testing::Test {
+protected:
+    virtual void SetUp() {
+        for(int i = 0; i < 10; ++i) {
+            records[i] = new char[100]();
+            std::fill_n(records[i], 99, (char)(i + 65));
+        }
+    }
+    virtual void TearDown() {
+        for(int i = 0; i < 10; ++i) {
+            delete[] records[i];
+        }
+    }
+    RecordManager rm;
+    char* records[10];
+    int rids[10];
+};
+
+TEST_F(RecordTest, InsertTest) {
+    for(int i = 0; i < 10; ++i) {
+        rids[i] = rm.addRecord(records[i], 100);
+    }
+
+    EXPECT_EQ(rm.pageSize(), 3);
+    EXPECT_EQ(rm.size(), 10);
+}
+
+TEST_F(RecordTest, GetTest) {
+    for(int i = 0; i < 10; ++i) {
+        rids[i] = rm.addRecord(records[i], 100);
+    }
+
+    auto res = rm.getRecord(rids[3]);
+    EXPECT_EQ(res.length, 100);
+    EXPECT_STREQ((char*)res.data, records[3]);
+
+    res = rm.getRecord(rids[9]);
+    EXPECT_EQ(res.length, 100);
+    EXPECT_STREQ((char*)res.data, records[9]);
+}
+

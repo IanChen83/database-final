@@ -18,6 +18,7 @@ set(SOURCE
     src/util.cpp
     src/page.cpp
     src/value.cpp
+    src/rm.cpp
 )
 
 add_library(database-final ${SOURCE})
