@@ -142,6 +142,7 @@ struct Action {
  * */
 bool isValidRecord(const char*);
 bool isValidValue(const char*);
+Value* getValue(std::string);
 
 bool isValidRInput(const char*);
 bool isValidIInput(const char*);

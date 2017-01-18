@@ -166,3 +166,45 @@ TEST(ActionUsageTest, getIPayload) {
     EXPECT_STREQ(p1.values[1].first->StrValue, "2");
     EXPECT_STREQ(p1.values[1].second, "Record2");
 }
+
+TEST(ActionUsageTest, getSPayload) {
+    auto s1 = getSPayload("Scan Student");
+    EXPECT_EQ(s1.name, "Student");
+}
+
+TEST(ActionUsageTest, getQPayload) {
+    auto q1 = getQPayload("q Student 10");
+    EXPECT_EQ(q1.name, "Student");
+    ASSERT_EQ(q1.value1->type, ValueType::Integer);
+    EXPECT_EQ(q1.value1->IntValue, 10);
+
+    auto q2 = getQPayload("q Student 10 20");
+    EXPECT_EQ(q2.name, "Student");
+    ASSERT_EQ(q2.value1->type, ValueType::Integer);
+    EXPECT_EQ(q2.value1->IntValue, 10);
+    ASSERT_EQ(q2.value2->type, ValueType::Integer);
+    EXPECT_EQ(q2.value2->IntValue, 20);
+
+    auto q3 = getQPayload("q Student \"10\"");
+    EXPECT_EQ(q3.name, "Student");
+    ASSERT_EQ(q3.value1->type, ValueType::String);
+    EXPECT_STREQ(q3.value1->StrValue, "10");
+
+    auto q4 = getQPayload("q Student \"10\" \"20\"");
+    EXPECT_EQ(q4.name, "Student");
+    ASSERT_EQ(q4.value1->type, ValueType::String);
+    EXPECT_STREQ(q4.value1->StrValue, "10");
+    ASSERT_EQ(q4.value2->type, ValueType::String);
+    EXPECT_STREQ(q4.value2->StrValue, "20");
+}
+
+TEST(ActionUsageTest, getPPayload) {
+    auto p1 = getPPayload("p Student 10");
+    EXPECT_EQ(p1.name, "Student");
+    EXPECT_EQ(p1.pid, 10);
+}
+
+TEST(ActionUsageTest, getCPayload) {
+    auto c1 = getCPayload("c Student");
+    EXPECT_EQ(c1.name, "Student");
+}

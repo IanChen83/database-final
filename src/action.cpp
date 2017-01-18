@@ -18,6 +18,14 @@ createRecord(const char* v, const char* d) {
     return NULL;
 }
 
+Value*
+getValue(string input) {
+    if(input[0] == '"')
+        return createValue(input.substr(1, input.size() - 2).c_str());
+    else
+        return createValue(std::stoi(input));
+}
+
 static inline void
 removeRecord(Record* v) {
     delete[] v;
@@ -251,17 +259,8 @@ getIPayload(const char* input) {
         auto token = tokenize(x.c_str(), ',', true);
         char* recordValue = new char[token[1].size() - 1];
         strcpy(recordValue, token[1].substr(1, token[1].size() - 2).c_str());
-        if(token[0][0] == '"') {
-            values.emplace_back(
-                    createValue(token[0].substr(1, token[0].size() - 2).c_str()),
-                    recordValue
-                    );
-        } else {
-            values.emplace_back(
-                    createValue(std::stoi(token[0])),
-                    recordValue
-                    );
-        }
+        auto value = getValue(token[0]);
+        values.emplace_back(value, recordValue);
     }
 
     IPayload r = {
@@ -284,7 +283,7 @@ getDPayload(const char* input) {
 
 SPayload
 getSPayload(const char* input) {
-    auto tokens = tokenize(input, ',', true);
+    auto tokens = tokenize(input, ' ', true);
     SPayload r = {
         .name = tokens[1]
     };
@@ -293,16 +292,16 @@ getSPayload(const char* input) {
 
 QPayload
 getQPayload(const char* input) {
-    auto tokens = tokenize(input, ',', true);
+    auto tokens = tokenize(input, ' ', true);
 
     Value* value1 = NULL;
     Value* value2 = NULL;
 
     if(tokens.size() == 3) {
-        value1 = createValue(tokens[2].c_str());
+        value1 = getValue(tokens[2]);
     } else {
-        value1 = createValue(tokens[2].c_str());
-        value2 = createValue(tokens[3].c_str());
+        value1 = getValue(tokens[2]);
+        value2 = getValue(tokens[3]);
     }
 
     QPayload r = {
@@ -316,7 +315,7 @@ getQPayload(const char* input) {
 
 PPayload
 getPPayload(const char* input) {
-    auto tokens = tokenize(input, ',', true);
+    auto tokens = tokenize(input, ' ', true);
     PPayload r = {
         .name = tokens[1],
         .pid = (uint16_t)std::stoi(tokens[2])
@@ -327,7 +326,7 @@ getPPayload(const char* input) {
 
 CPayload
 getCPayload(const char* input) {
-    auto tokens = tokenize(input, ',', true);
+    auto tokens = tokenize(input, ' ', true);
     CPayload r = {
         .name = tokens[1]
     };
