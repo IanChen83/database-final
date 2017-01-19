@@ -29,3 +29,6 @@ Run tests by typing in `make test`. Alternatively, you can find each test execut
 #### Development
 
 The easiest way to write a new test is copying the initial test folder and change cmake configuration file in it.
+
+#### Report HackMD
+[Report](https://hackmd.io/BwdgjAbGAMAmEFoCcAzAhogLE4mECN8BTAYwNgGYBWaNK2EoopIA?both)
