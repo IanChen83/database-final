@@ -38,7 +38,7 @@ enum ActionType { U, R, I, D, S, Q, P, C };
 
 
 /*
- * A Record is a key(of type 'Value')/value(of type 'const char*')
+ * A Record is a key(of type 'Value')/value(of type 'std::string')
  *
  * call createRecord(key, value) to create a new record in heap
  * call removeRecord(Record*) to remove a record

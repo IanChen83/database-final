@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cstring>
 #include <map>
 #include "bpt.h"
 #include "action.h"
@@ -89,7 +90,7 @@ int main(int argc, char* argv[]) {
                 break;
             }
             case ActionType::Q :{
-                string name = action->payload.q.name;  
+                string name = action->payload.q.name;
                 Relation* r= relations[name];
                 if (action->payload.q.value2 == NULL) {
                     // single query
@@ -103,7 +104,7 @@ int main(int argc, char* argv[]) {
                 break;
             }
             case ActionType::P :{
-                string name = action->payload.p.name;  
+                string name = action->payload.p.name;
                 Relation* r= relations[name];
                 uint16_t pid = action->payload.p.pid;
                 for(int i = 0, l = r->rm->getPageLength(pid);i < l ; i++) {

@@ -8,7 +8,7 @@ using namespace std;
 bool
 operator>(const Value &l, const Value &r) {
     if (l.type == ValueType::Integer) {
-        return l.IntValue > r.IntValue; 
+        return l.IntValue > r.IntValue;
     } else if (l.type == ValueType::String) {
         return strcmp(l.StrValue, r.StrValue) > 0;
     } else {
@@ -19,7 +19,7 @@ operator>(const Value &l, const Value &r) {
 bool
 operator<(const Value &l, const Value &r) {
     if (l.type == ValueType::Integer) {
-        return l.IntValue < r.IntValue; 
+        return l.IntValue < r.IntValue;
     } else if (l.type == ValueType::String) {
         return strcmp(l.StrValue, r.StrValue) < 0;
     } else {
@@ -30,7 +30,7 @@ operator<(const Value &l, const Value &r) {
 bool
 operator<=(const Value &l, const Value &r) {
     if (l.type == ValueType::Integer) {
-        return l.IntValue <= r.IntValue; 
+        return l.IntValue <= r.IntValue;
     } else if (l.type == ValueType::String) {
         return strcmp(l.StrValue, r.StrValue) <= 0;
     } else {
@@ -41,7 +41,7 @@ operator<=(const Value &l, const Value &r) {
 bool
 operator!=(const Value &l, const Value &r) {
     if (l.type == ValueType::Integer) {
-        return l.IntValue != r.IntValue; 
+        return l.IntValue != r.IntValue;
     } else if (l.type == ValueType::String) {
         return strcmp(l.StrValue, r.StrValue) != 0;
     } else {
@@ -52,7 +52,7 @@ operator!=(const Value &l, const Value &r) {
 bool
 operator==(const Value &l, const Value &r) {
     if (l.type == ValueType::Integer) {
-        return l.IntValue == r.IntValue; 
+        return l.IntValue == r.IntValue;
     } else if (l.type == ValueType::String) {
         return strcmp(l.StrValue, r.StrValue) == 0;
     } else {
@@ -79,7 +79,7 @@ createValue(const char* v, size_t size) {
     return (Value*)r;
 }
 
-static inline void
+void
 removeValue(Value* v) {
     delete[] (char*)v;
 }

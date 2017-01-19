@@ -49,6 +49,6 @@ bool operator== (const Value&, const Value&);
 Value* createValue(int, size_t = 0);
 Value* createValue(const char*, size_t = 0);
 
-static inline void removeValue(Value*);
+void removeValue(Value*);
 
 #endif

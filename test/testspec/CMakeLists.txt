@@ -2,6 +2,7 @@ add_executable(testspec
     main.cpp
     action_spec.cpp
     action_usage.cpp
+    record_manager.cpp
     )
 
 target_include_directories(testspec PUBLIC ../../src)
