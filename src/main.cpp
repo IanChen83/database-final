@@ -16,7 +16,7 @@ getKeyFromValue(Value v) {
     if (v.type == ValueType::String) {
         char key[10];
         strncpy(key, v.StrValue, 10);
-        return Value(key);
+        return *createValue(key);
     } else {
         return v;
     }
@@ -83,7 +83,11 @@ int main(int argc, char* argv[]) {
                     }
                     rid_t rid = relation->rm->addRecord(records[i]);
                     fout << "#page: " << get_pid(rid) <<" #slot" << get_sn(rid) << endl;
-                    relation->tree->bplus_tree_insert(getKeyFromValue(*v), rid);
+                    Value vm = getKeyFromValue(*v);
+                    if (!relation->tree->bplus_tree_insert(vm, rid)) {
+                        cout << "Error: insert fail" << vm.StrValue << endl;
+                        relation->rm->removeRecord(rid);
+                    }
                 }
                 break;
             }
@@ -95,8 +99,9 @@ int main(int argc, char* argv[]) {
                     fout << "delete type error\n";
                     continue;
                 }
-                rid_t rid = relation->tree->bplus_tree_search(*v);
-                if (rid < 0 || !relation->tree->bplus_tree_delete(*v)) {
+                Value vm = getKeyFromValue(*v);
+                rid_t rid = relation->tree->bplus_tree_search(vm);
+                if (rid < 0 || !relation->tree->bplus_tree_delete(vm)) {
                     fout << "value doesn't exist\n";
                 } else {
                     relation->rm->removeRecord(rid);
@@ -123,8 +128,8 @@ int main(int argc, char* argv[]) {
                     }
 
                     fout << "Key: " << getValueStr(*v)
-                    << "size of rest of record: " << get<1>(r->rm->getRecord(rid)).length()
-                    << "Rid: " << rid << endl;
+                    << ",size of rest of record: " << get<1>(r->rm->getRecord(rid)).length()
+                    << ",Rid: " << rid << endl;
                 } else {
                     Value v1 = getKeyFromValue(*action->payload.q.value1);
                     Value v2 = getKeyFromValue(*action->payload.q.value2);
@@ -164,5 +169,6 @@ int main(int argc, char* argv[]) {
         delete action;
     }
     fin.close();
+    fout.close();
     return 0;
 }
