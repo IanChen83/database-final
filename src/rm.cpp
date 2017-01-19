@@ -8,7 +8,7 @@
 
 using namespace std;
 
-std::pair<char*, unsigned int>
+RawData
 recordToData(const Record& record, ValueType type) {
     Value* v;
     string s;
@@ -22,10 +22,10 @@ recordToData(const Record& record, ValueType type) {
     }
 
     // key length + split char + data length
-    len = keylen + 1 + s.size();
+    len = keylen + 1 + s.size() + 1;
 
     // Prepare data
-    char* data = new char[len];
+    char* data = new char[len]();
     if(type == ValueType::Integer) {
         *(int*)data = v->IntValue;
     }else if(type == ValueType::String) {
@@ -39,19 +39,19 @@ recordToData(const Record& record, ValueType type) {
 }
 
 Record
-dataToRecord(std::pair<char*, unsigned int> data_len, ValueType type) {
+dataToRecord(RawData data, ValueType type) {
     unsigned int len = 0, keylen = 0;
     Value* value;
     if(type == ValueType::Integer) {
         keylen = sizeof(int);
-        value = createValue(*(int*)(data_len.first));
+        value = createValue(*(int*)get_raw_pointer(data));
     }else if(type == ValueType::String) {
-        keylen = strlen(data_len.first);
-        value = createValue(data_len.first);
+        keylen = strlen(get_raw_pointer(data));
+        value = createValue(get_raw_pointer(data));
     }
 
-    len = data_len.second - 1 - keylen;
-    return Record(value, string(data_len.first + keylen + 1, len));
+    len = get_raw_length(data) - 1 - keylen - 1;
+    return Record(value, string(get_raw_pointer(data) + keylen + 1, len));
 }
 
 RecordManager::RecordManager(ValueType _type) : _size(0), type(_type) {}

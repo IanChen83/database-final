@@ -166,6 +166,8 @@ TEST(ActionUsageTest, getIPayload) {
     EXPECT_EQ(std::get<0>(p1.values[1])->type, ValueType::String);
     EXPECT_STREQ(std::get<0>(p1.values[1])->StrValue, "2");
     EXPECT_EQ(std::get<1>(p1.values[1]), "Record2");
+
+    auto p2 = getIPayload("I, Movie, \"nkpgrtgadybxphreddb\", \"xnrmnw osiyjc spidiliexmlfebsrppsccjtxbmqvrnj\"; \"ksxzilnqvghaamez\", \"ximtkhtuuccevaml\"; \"fbajhdwzzvj\", \"ualawrozurougzmdtlievdzyzqjphqz alntmmgxwoiorrdh\"; \"sbscccjpui\", \"blqrebefmgglqfcrzvmahxur iwn fjwiurfgcjumkr y\"; \"dhvldaieuspxv\", \"pjzybavflhrzonjrsenigwpmwaw\"; \"cpbfdoghexzol\", \"drnkulrxnanzhxoqabmpj qk\"");
 }
 
 TEST(ActionUsageTest, getSPayload) {

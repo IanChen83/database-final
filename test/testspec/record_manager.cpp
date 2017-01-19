@@ -16,7 +16,7 @@ TEST(RecordManager, recordToData) {
     Record record  = make_tuple(createValue(12), "asdf");
 
     auto x = recordToData(record, ValueType::Integer);
-    EXPECT_EQ(x.second, 9);
+    EXPECT_EQ(x.second, 10);
     EXPECT_EQ(*(int*)x.first, 12);
     EXPECT_STREQ(x.first + 5, "asdf");
 

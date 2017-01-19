@@ -6,12 +6,17 @@
 #include "page.h"
 #include <utility>
 
+typedef std::pair<char*, unsigned int> RawData;
+
+#define get_raw_pointer(x) (x.first)
+#define get_raw_length(x) (x.second)
+
 #define get_pid(rid) (rid >> 16)
 #define get_sn(rid) (rid & 65535)
 #define to_rid(pid, sn) ((((int32_t)pid) << 16) | (((int32_t)sn) & 65535))
 
-std::pair<char*, unsigned int> recordToData(const Record&, ValueType);
-Record dataToRecord(std::pair<char*, unsigned int>, ValueType);
+RawData recordToData(const Record&, ValueType);
+Record dataToRecord(RawData, ValueType);
 
 class RecordManager {
 public:

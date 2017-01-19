@@ -71,8 +71,8 @@ createValue(int v, size_t size) {
 
 Value*
 createValue(const char* v, size_t size) {
-    size = max(sizeof(Value) + strlen(v), size);
-    char* r = new char[size];
+    size = max(sizeof(Value) + strlen(v) + 1, size);
+    char* r = new char[size]();
     ((Value*)r)->type = ValueType::String;
     ((Value*)r)->StrValue = (char*)((Value*)r + 1);
     strcpy((char*)((Value*)r + 1), v);

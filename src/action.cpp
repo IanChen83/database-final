@@ -275,7 +275,7 @@ getDPayload(const char* input) {
     auto tokens = tokenize(input, ',', true);
     DPayload r = {
         .name = tokens[1],
-        .value = createValue(tokens[2].c_str())
+        .value = getValue(tokens[2])
     };
     return r;
 }
