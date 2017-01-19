@@ -33,7 +33,7 @@ recordToData(const Record& record, ValueType type) {
     }
 
     data[keylen] = '\0';
-    strcpy(data + keylen + 1, s.c_str());
+    memcpy(data + keylen + 1, s.c_str(), s.size());
 
     return make_pair(data, len);
 }
