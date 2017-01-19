@@ -54,7 +54,10 @@ int main(int argc, char* argv[]) {
     while(fin.getline(line,sizeof(line),'\n')){
         cout<<line<<endl;
         Action* action = getAction(line);
-        if (action == NULL) continue;
+        if (action == NULL) {
+            cout << "Invalid Input format!!\n";
+            continue;
+        }
         switch(action->type) {
             case ActionType::R :{
                 string name = action->payload.r.name;
@@ -86,7 +89,9 @@ int main(int argc, char* argv[]) {
             }
             case ActionType::S :{
                 string name = action->payload.s.name;
-                printf("# leaf page: %d\n #total index page: %d\n", relations[name]->tree->get_leaf_num(),relations[name]->tree->get_non_leaf_num());
+                int leaf_num = relations[name]->tree->get_leaf_num();
+                int non_leaf_num = relations[name]->tree->get_non_leaf_num();
+                printf("# leaf page: %d\n #total index page: %d\n", leaf_num, leaf_num+non_leaf_num);
                 break;
             }
             case ActionType::Q :{
@@ -112,8 +117,15 @@ int main(int argc, char* argv[]) {
                 }
                 break;
             }
-            case ActionType::C :
-            break;
+            case ActionType::C :{
+                string name = action->payload.p.name;  
+                Relation* relation= relations[name];
+                int leaf_num = relation->tree->get_leaf_num();
+                int non_leaf_num = relation->tree->get_non_leaf_num();
+                int pageSize = relation->rm->pageSize();
+                printf("# index page: %d, # slotted data pages %d\n", leaf_num+non_leaf_num, pageSize);
+                break;
+            }
             default:
             break;
         }
