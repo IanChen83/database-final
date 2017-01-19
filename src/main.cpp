@@ -31,7 +31,7 @@ class Relation {
             } else {
                 tree = new bplus_tree(10, 85, 85, type);
             }
-            rm = new RecordManager();
+            rm = new RecordManager(type);
         }
         ~Relation() {
             delete tree;
