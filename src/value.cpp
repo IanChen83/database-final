@@ -79,6 +79,17 @@ createValue(const char* v, size_t size) {
     return (Value*)r;
 }
 
+string
+getValueStr(const Value& v) {
+    if (v.type == ValueType::Integer) {
+        return to_string(v.IntValue);
+    } else if (v.type == ValueType::String) {
+        return string(v.StrValue);
+    } else {
+        assert(0);
+    }
+}
+
 void
 removeValue(Value* v) {
     delete[] (char*)v;

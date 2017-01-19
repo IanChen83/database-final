@@ -47,15 +47,22 @@ class Relation {
 
 int main(int argc, char* argv[]) {
     const char* filename = "../ProjectB_data.txt";
+    const char* outname = "../output.txt";
     char line[SIZE];
     fstream fin;
+    fstream fout;
     fin.open(filename,ios::in);
+    fout.open(outname, ios::out);
+    if (!fin || !fout) {
+        printf("open file error\n");
+        return 1;
+    }
     map<string, Relation*> relations;
     while(fin.getline(line,sizeof(line),'\n')){
-        cout<<line<<endl;
+        fout<<line<<endl;
         Action* action = getAction(line);
         if (action == NULL) {
-            cout << "Invalid Input format!!\n";
+            fout << "Invalid Input format!!\n";
             continue;
         }
         switch(action->type) {
@@ -69,8 +76,12 @@ int main(int argc, char* argv[]) {
                 Relation* relation = relations[name];
                 vector<Record> records = action->payload.i.values;
                 for (int i=0, l=records.size(); i<l; i++) {
-                    rid_t rid = relation->rm->addRecord(records[i]);
                     Value* v = get<0>(records[i]);
+                    if(v->type != relation->type) {
+                        fout << "input type error\n";
+                        continue;
+                    }
+                    rid_t rid = relation->rm->addRecord(records[i]);
                     relation->tree->bplus_tree_insert(getKeyFromValue(*v), rid);
                 }
                 break;
@@ -79,9 +90,13 @@ int main(int argc, char* argv[]) {
                 string name = action->payload.d.name;
                 Relation* relation = relations[name];
                 Value* v = action->payload.d.value;
+                if (v->type != relation->type) {
+                    fout << "delete type error\n";
+                    continue;
+                }
                 rid_t rid = relation->tree->bplus_tree_search(*v);
                 if (rid < 0 || !relation->tree->bplus_tree_delete(*v)) {
-                    printf("value doesn't exist\n");
+                    fout << "value doesn't exist\n";
                 } else {
                     relation->rm->removeRecord(rid);
                 }
@@ -91,7 +106,7 @@ int main(int argc, char* argv[]) {
                 string name = action->payload.s.name;
                 int leaf_num = relations[name]->tree->get_leaf_num();
                 int non_leaf_num = relations[name]->tree->get_non_leaf_num();
-                printf("# leaf page: %d\n #total index page: %d\n", leaf_num, leaf_num+non_leaf_num);
+                fout << "# leaf page: " <<leaf_num<< "#total index page" << leaf_num+non_leaf_num << endl;
                 break;
             }
             case ActionType::Q :{
@@ -101,10 +116,23 @@ int main(int argc, char* argv[]) {
                     // single query
                     Value* v = action->payload.q.value1;
                     rid_t rid = r->tree->bplus_tree_search(getKeyFromValue(*v));
+                    if (rid < 0) {
+                        fout << "query value doesn't exist\n";
+                        continue;
+                    }
+
+                    fout << "Key: " << getValueStr(*v)
+                    << "size of rest of record: " << get<1>(r->rm->getRecord(rid)).length()
+                    << "Rid: " << rid;
                 } else {
                     Value v1 = getKeyFromValue(*action->payload.q.value1);
                     Value v2 = getKeyFromValue(*action->payload.q.value2);
                     vector<rid_t> rid_list = r->tree->bplus_tree_get_range(v1, v2);
+                    fout << "Rid List: ";
+                    for (auto& x: rid_list) {
+                        fout << x << " ";
+                    }
+                    fout << endl;
                 }
                 break;
             }
@@ -112,9 +140,12 @@ int main(int argc, char* argv[]) {
                 string name = action->payload.p.name;
                 Relation* r= relations[name];
                 uint16_t pid = action->payload.p.pid;
+                fout << "Content: ";
                 for(int i = 0, l = r->rm->getPageLength(pid);i < l ; i++) {
                     Record record = r->rm->getRecord(to_rid(pid, i));
+                    fout << getValueStr(*get<0>(record))<< " " <<get<1>(record) << ",";
                 }
+                fout<<endl;
                 break;
             }
             case ActionType::C :{
@@ -123,7 +154,7 @@ int main(int argc, char* argv[]) {
                 int leaf_num = relation->tree->get_leaf_num();
                 int non_leaf_num = relation->tree->get_non_leaf_num();
                 int pageSize = relation->rm->pageSize();
-                printf("# index page: %d, # slotted data pages %d\n", leaf_num+non_leaf_num, pageSize);
+                fout << "# index page: " << leaf_num+non_leaf_num << ", # slotted data pages " << pageSize << endl;
                 break;
             }
             default:
@@ -131,5 +162,6 @@ int main(int argc, char* argv[]) {
         }
         delete action;
     }
+    fin.close();
     return 0;
 }

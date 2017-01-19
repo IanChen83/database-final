@@ -411,7 +411,7 @@ bplus_tree::bplus_tree_search(Value key) {
     }
     }
 
-    return 0;
+    return -1;
 }
 
 bool

@@ -49,6 +49,8 @@ bool operator== (const Value&, const Value&);
 Value* createValue(int, size_t = 0);
 Value* createValue(const char*, size_t = 0);
 
+std::string getValueStr(const Value&);
+
 void removeValue(Value*);
 
 #endif
