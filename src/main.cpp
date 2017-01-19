@@ -124,7 +124,7 @@ int main(int argc, char* argv[]) {
 
                     fout << "Key: " << getValueStr(*v)
                     << "size of rest of record: " << get<1>(r->rm->getRecord(rid)).length()
-                    << "Rid: " << rid;
+                    << "Rid: " << rid << endl;
                 } else {
                     Value v1 = getKeyFromValue(*action->payload.q.value1);
                     Value v2 = getKeyFromValue(*action->payload.q.value2);
@@ -150,7 +150,7 @@ int main(int argc, char* argv[]) {
                 break;
             }
             case ActionType::C :{
-                string name = action->payload.p.name;  
+                string name = action->payload.p.name;
                 Relation* relation= relations[name];
                 int leaf_num = relation->tree->get_leaf_num();
                 int non_leaf_num = relation->tree->get_non_leaf_num();

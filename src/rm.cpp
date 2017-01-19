@@ -84,16 +84,17 @@ RecordManager::addRecord(const Record& record) {
         return -1;
     }
 
-    int16_t r = -1, pid = pages.size() - 1;
+    int16_t r = -1, pid = 0;
     for(auto page: pages) {
         r = add_record(page, data_len.first, data_len.second);
         if(r != -1) break;
+        ++pid;
     }
 
     if(r == -1) {
         // No available space, create new page
         auto x = create_page();
-        pid = pages.size() - 1;
+        pid = pages.size();
         r = add_record(x, data_len.first, data_len.second);
         pages.push_back(x);
     }
