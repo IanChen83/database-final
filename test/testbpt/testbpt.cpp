@@ -1,7 +1,9 @@
 #include <string>
+#include <iostream>
 #include "gtest/gtest.h"
 #define UNIT_TEST 0
 #include "bpt.h"
+#include "bpt.cpp"
 
 using namespace std;
 
@@ -87,11 +89,16 @@ TEST(Bpt, string_tree_delete) {
 
 TEST(Bpt, string_tree_search) {
     bplus_tree *tree = new bplus_tree(5, 10 ,10, ValueType::String);
-    Value a("a");
+    Value a("asdmslqw");
+    Value b("aqjwejqwemw");
     tree->bplus_tree_insert(a, 1);
-    bplus_leaf *root = (bplus_leaf *)tree->root;  
+    tree->bplus_tree_insert(b, 2);
     EXPECT_EQ(tree->bplus_tree_search(a), 1);
+    EXPECT_EQ(tree->bplus_tree_search(b), 2);
 }
 
-
+TEST(Bpt, key_binary_search) {
+    Value arr[] = {Value("nkpgrtgady"), Value("ksxzilnqvg"), Value("fbajhdwzzv"), Value("sbscccjpui")};
+    cout << key_binary_search(arr, 3, Value("dhvldaieus")) << endl;
+}
 
