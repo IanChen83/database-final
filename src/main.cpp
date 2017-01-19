@@ -82,6 +82,7 @@ int main(int argc, char* argv[]) {
                         continue;
                     }
                     rid_t rid = relation->rm->addRecord(records[i]);
+                    fout << "#page: " << get_pid(rid) <<" #slot" << get_sn(rid) << endl;
                     relation->tree->bplus_tree_insert(getKeyFromValue(*v), rid);
                 }
                 break;
