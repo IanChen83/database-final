@@ -4,6 +4,10 @@ database-final
 
 This is the repository for final project of database 2016 fall.
 
+
+## Report HackMD
+[Report](https://hackmd.io/BwdgjAbGAMAmEFoCcAzAhogLE4mECN8BTAYwNgGYBWaNK2EoopIA?both)
+
 ## Project Structure
 
 > * `src` All source files
@@ -30,5 +34,3 @@ Run tests by typing in `make test`. Alternatively, you can find each test execut
 
 The easiest way to write a new test is copying the initial test folder and change cmake configuration file in it.
 
-#### Report HackMD
-[Report](https://hackmd.io/BwdgjAbGAMAmEFoCcAzAhogLE4mECN8BTAYwNgGYBWaNK2EoopIA?both)
