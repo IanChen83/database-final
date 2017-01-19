@@ -3,7 +3,8 @@ database-final
 ==============
 
 This is the repository for final project of database 2016 fall.
-
+## Requirement
+Cmake > 2.8
 
 ## Report HackMD
 [Report](https://hackmd.io/BwdgjAbGAMAmEFoCcAzAhogLE4mECN8BTAYwNgGYBWaNK2EoopIA?both)
